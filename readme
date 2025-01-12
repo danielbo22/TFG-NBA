@@ -1,1 +1,8 @@
-inicio del proyecto
+Proyecto de TFG sobre NBA realizado por Daniel Bolaño Morillas
+año 2024/2025
+
+En este repositorio se almacenará todos los ficheros de programación necesarios para realizar el proyecto de TFG llevado a cabo. Estos pueden ser:
+  -Ficheros de datos
+  -Archivos de modificación de datos (ETL)
+  -Archivos de generación de estrucutra de la base de datos
+  -Archivos necesarios para instalación de herramientas del proyecto
