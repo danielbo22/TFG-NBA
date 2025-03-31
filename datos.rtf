@@ -1,0 +1,144 @@
+jugadas -> 
+	enlace a partido
+	periodo
+	hora real
+	hora relativa al partido -> los 12 minutos reglamentarios de cada periodo de la NBA
+	descripción (marca tipo, robo, inicio...)
+	puntuación -> solo en tiros
+	diferencia de puntuación -> solo en tiros
+	datos del jugador (id, nombre, id del equipo, nombre equipo, ciudad del equipo) -> de 1 a 3 dependiendo de tipo jugadas
+
+Puedo organizar las jugadas segun tipos especificos(tiro, inicio,  robo...)
+Se puede hacer el seguimiento de la puntuación al seguir las jugadas de un partido especifico.
+
+
+partida ->
+	id de la season
+	tipo season
+	id del equipo de casa
+	abreviación de equipo casa
+	nombre equipo casa
+	id a partidas
+	fecha partida
+	duelo entre equipos -> se pueden sacar los datos del equipo que no es de casa
+	orientación del equipo de casa en el partido
+	duración en minutos
+	
+
+Equipo ->
+	id
+	nombre completo
+	abreviación
+	nombre
+	ciudad
+	Estado
+	año creación
+	año que se mantiene activo
+	arena ???? -> puede que estadio considerado su casa?
+	capacidad de la arena
+	propietario
+	manager
+	coach
+	liga de afiliación
+	
+	
+
+Ubicación -> no existente, se puede asociar una ubicación a las jugadas a traves de los partidos->id del equipo local
+	id
+	arena 
+	ciudad
+	estado
+
+Jugador ->
+	id
+	nombre completo
+	primer nombre	
+	segundo nombre
+	si esta activo
+	escuela
+	pais
+	numero -> se puede obtener de officials al asociar a un partido y a la jugada de esta
+
+Fecha -> no existente, pero se puede obtener la hora especifica, la hora dentro de los periodos del partido y las fechas completas a traves de los partidos
+	hora periodo
+	periodo
+	hora exacta
+	dia
+	mes 
+	año
+
+Nos centraremos en los partidos. En estos partidos se conectan lo siguiente.
+	-Una fecha especifica con hora inicial, dia, mes y año.
+	-2 equipos jugando dicho partido
+	-12-15 jugadores por cada equipo en el partido
+	-Una ubicación donde se juega dicho partido
+	-Una serie de jugadas dentro de dicho partido. Dichas jugadas se deviden en periodos de juego y se pueden seguir mediante en numero de evento.
+	-
+
+De los partidos se pueden obtener las siguientes estadisticas a estudiar(mejor obtenerlas por las jugadas que desde las existentes por su falta en muchos juegos):
+	-id
+	-season
+	-tipo season
+	+Quiza sea mejor hacer atributos para cada equipo o una instancia de partido para cada equipo(2 instancias por cada partido real):
+	+Se pueden hacer los exitosos y fallidos o los exitosos y totales.
+		X-puntos
+		X-diferencia de puntos
+		-Saques exitosos
+		-Saques fallidos
+		-tiro doble exitoso
+		-tiro triple exitoso
+		-tiro libre exitoso
+		-tiro doble fallido
+		-tiro triple fallido
+		-tiro libre fallido
+		-robo exitosos -> causar perdida de balon al equipo contrario
+		-robo fallidos -> intento fallido de causar perdida de balon al equipo contrario
+		-rebotes defensivos obtenidos -> recuperación del balon tras tiros del equipo contrario
+		-rebotes ofensivos obtenidos -> recuperación del balon tras tiros del propio equipo
+		-rebote obtenido -> cambio de balon al ocurrir un tiro fallido
+		-tiros bloqueados -> tiros dobles/triples evitados por el equipo
+		-perdidas de balón (puede haber varios tipos) -> perdidas del balon del equipo
+		-cambios -> cambios de jugadores del equipo
+		-tiempos muertos -> tiempos muertos pedidos por el equipo
+		-faltas (hay diversos tipos)(se pueden dividir en recibidas y ocasionadas)
+			-personal -> contacto fisico ilegal con el equipo contrario
+			------tecnica -> conducta antideportiva con el equipo contrario
+			------flagrante -> Acción violenta con el equipo contrario
+			-balon suelto -> contacto ilegal al intentar obtener balon del equipo contrario
+			-disparo -> falta causada al realizar un tiro el equipo contrario
+			-de rebote -> Falta ocurrida en momento de rebote de bola
+			-ofensiva -> falta cuando el equipò esta atacando
+
+La conversion de evento de jugadas a atributos es la siguiente ->
+	-puntos -> Calculado al final del partido con tiros dobles, triples y libres.
+	-diferencia de puntos -> diferencias entre puntos de 2 equipos.
+	-Saques exitosos -> Jump Ball y la Tip marca equipo vencedor.
+	-Saques fallidos -> Jump Ball y el equipo que no este en el Tip Tip marca equipo perdedor.
+	-tiro doble exitoso -> Jump Shot, Layup, Slam Dunk, Hook Shot, Running Jump Shot, Tip Shot, Driving Layup, Manning Layup, Dunk
+	-tiro triple exitoso -> 3PT Jump Shot,
+	-tiro libre exitoso -> Free Throw
+	-tiro doble fallido -> MISS ... Jump Shot, MISS ... Layup,MISS ... Slam Dunk, MISS ... Hook Shot, MISS ... Running Jump Shot, MISS ... Tip Shot, MISS ... Driving Layup, MISS ... Manning Layup
+	-tiro triple fallido -> MISS ... 3PT Jump Shot,
+	-tiro libre fallido -> MISS ... Free Throw
+	-robo exitosos -> STEAL
+	-robo fallidos -> MISS ... STEAL
+	-rebotes defensivos obtenidos -> REBOUND con marca de Def aumentando 1.
+	-rebotes ofensivos obtenidos -> REBOUND con marca de Off aumentando 1.
+	-Rebote obtenido -> Rebound
+	-tiros bloqueados -> BLOCK
+	-perdidas de balón (puede haber varios tipos) -> Turnover
+	-cambios -> SUB
+	-tiempos muertos -> Timeout
+	-faltas (hay diversos tipos)(se pueden dividir en recibidas y ocasionadas)
+			-personal -> P.FOUL
+			-tecnica -> 
+			-flagrante ->
+			-balon suelto -> L.B.FOUL
+			-disparo -> S.FOUL
+			-de rebote -> Foul Turnover
+			-ofensiva -> OFF.Foul
+			
+Aplicaciones usadas->
+Mendeley para control de las referencias
+	
+	
