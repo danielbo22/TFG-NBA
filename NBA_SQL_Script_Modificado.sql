@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS Fecha (
   temporada STRING,
   dia INT,
   mes INT,
-  año INT
+  ano INT
 )
 STORED AS PARQUET;
 
