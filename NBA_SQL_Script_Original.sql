@@ -102,6 +102,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Jugador` (
   `posicion` VARCHAR(45) NULL,
   `escuela` VARCHAR(45) NULL,
   `pais` VARCHAR(45) NULL,
+  `equipo` VARCHAR(90) NULL,
   `estado_actual` INT NULL,
   `carrera_profesional` VARCHAR(45) NULL,
   PRIMARY KEY (`idJugador`))

@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS Jugador (
   posicion STRING,
   escuela STRING,
   pais STRING,
+  equipo STRING,
   estado_actual INT,
   carrera_profesional STRING
 )
