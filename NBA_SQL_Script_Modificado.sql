@@ -11,21 +11,24 @@ CREATE TABLE IF NOT EXISTS Equipo (
   ciudad STRING,
   estado STRING
 )
-STORED AS PARQUET;
+STORED AS PARQUET
+LOCATION 'hdfs://localhost:9000/opt/hive/apache-hive-3.1.3-bin/warehouse/mydb.db/equipo';
 
 -- Tabla Arbitro
 CREATE TABLE IF NOT EXISTS Arbitro (
   idArbitro INT,
   nombre STRING
 )
-STORED AS PARQUET;
+STORED AS PARQUET
+LOCATION 'hdfs://localhost:9000/opt/hive/apache-hive-3.1.3-bin/warehouse/mydb.db/arbitro';
 
 -- Tabla Liga
 CREATE TABLE IF NOT EXISTS Liga (
   idLiga INT,
   nombre STRING
 )
-STORED AS PARQUET;
+STORED AS PARQUET
+LOCATION 'hdfs://localhost:9000/opt/hive/apache-hive-3.1.3-bin/warehouse/mydb.db/liga';
 
 -- Tabla Fecha
 CREATE TABLE IF NOT EXISTS Fecha (
@@ -35,7 +38,8 @@ CREATE TABLE IF NOT EXISTS Fecha (
   mes INT,
   ano INT
 )
-STORED AS PARQUET;
+STORED AS PARQUET
+LOCATION 'hdfs://localhost:9000/opt/hive/apache-hive-3.1.3-bin/warehouse/mydb.db/fecha';
 
 -- Tabla Ubicacion
 CREATE TABLE IF NOT EXISTS Ubicacion (
@@ -45,7 +49,8 @@ CREATE TABLE IF NOT EXISTS Ubicacion (
   ciudad STRING,
   estado STRING
 )
-STORED AS PARQUET;
+STORED AS PARQUET
+LOCATION 'hdfs://localhost:9000/opt/hive/apache-hive-3.1.3-bin/warehouse/mydb.db/ubicacion';
 
 -- Tabla Jugador
 CREATE TABLE IF NOT EXISTS Jugador (
@@ -62,7 +67,8 @@ CREATE TABLE IF NOT EXISTS Jugador (
   estado_actual INT,
   carrera_profesional STRING
 )
-STORED AS PARQUET;
+STORED AS PARQUET
+LOCATION 'hdfs://localhost:9000/opt/hive/apache-hive-3.1.3-bin/warehouse/mydb.db/jugador';
 
 -- Tabla Partido
 CREATE TABLE IF NOT EXISTS Partido (
@@ -102,4 +108,5 @@ CREATE TABLE IF NOT EXISTS Partido (
   Cantidad_Ataques_Fallidos INT,
   Proporcion_Exito_Ataques FLOAT
 )
-STORED AS PARQUET;
+STORED AS PARQUET
+LOCATION 'hdfs://localhost:9000/opt/hive/apache-hive-3.1.3-bin/warehouse/mydb.db/partido';
