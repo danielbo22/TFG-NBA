@@ -5,7 +5,7 @@ from pyspark.sql.functions import concat_ws, col
 
 #mysql-connector-j-9.3.0.jar
 
-# Crear la sesión Spark con la dependencia JDBC para MySQL
+# Crear la sesión Spark
 spark = SparkSession.builder \
                     .config("spark.sql.warehouse.dir", "hdfs://localhost:9000/user/hive/warehouse") \
                     .appName("TFG NBA") \
@@ -35,10 +35,10 @@ df = df.withColumn("nombre", concat_ws(" ", col("first_name"), col("last_name"))
 # Eliminar columna "official_id"
 df = df.drop("official_id")
 
-# (Opcional) reorganizar columnas
+# Reorganizar columnas
 df = df.select("idArbitro", "nombre")
 
-#mostramos la tabla final
+# Mostramos la tabla final
 df.show()
 
 # Almacenamos el resultado en Hive
