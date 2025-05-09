@@ -1,7 +1,7 @@
 import pyspark
 from pyspark.sql import SparkSession
 from pyspark.sql import functions
-from pyspark.sql.functions import concat_ws, col
+from pyspark.sql.functions import concat_ws, col, when
 
 #mysql-connector-j-9.3.0.jar
 
@@ -22,11 +22,17 @@ df = spark.read.option("delimiter", ",") \
                 .csv(path + "game.csv")
 
 # Seleccionar los datos necesarios para la tabla y poner el nombre de las columnas especificos
-df = df.select("season_type")
+df = df.select("season_type") \
+       .withColumnRenamed("season_type", "nombre") 
 
+# Estandarizar el caso especifico All Star y All-Star
+df = df.withColumn(
+    "nombre",
+    when(col("nombre") == "All Star", "All-Star").otherwise(col("nombre"))
+)
 
 # Eliminar duplicados y generar la id de la tabla
-df = df.dropDuplicates(["season_type"]) \
+df = df.dropDuplicates(["nombre"]) \
     .withColumn("idLiga", functions.monotonically_increasing_id())
 
 # Reorganizar columnas
