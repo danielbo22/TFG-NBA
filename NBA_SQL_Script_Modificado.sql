@@ -4,7 +4,7 @@ USE mydb;
 
 -- Tabla Equipo
 CREATE TABLE IF NOT EXISTS Equipo (
-  idEquipo INT,
+  idEquipo BIGINT,
   estado_actual INT,
   nombre STRING,
   arena STRING,
@@ -16,7 +16,7 @@ LOCATION 'hdfs://localhost:9000/opt/hive/apache-hive-3.1.3-bin/warehouse/mydb.db
 
 -- Tabla Arbitro
 CREATE TABLE IF NOT EXISTS Arbitro (
-  idArbitro INT,
+  idArbitro BIGINT,
   nombre STRING
 )
 STORED AS PARQUET
@@ -24,7 +24,7 @@ LOCATION 'hdfs://localhost:9000/opt/hive/apache-hive-3.1.3-bin/warehouse/mydb.db
 
 -- Tabla Liga
 CREATE TABLE IF NOT EXISTS Liga (
-  idLiga INT,
+  idLiga BIGINT,
   nombre STRING
 )
 STORED AS PARQUET
@@ -32,7 +32,7 @@ LOCATION 'hdfs://localhost:9000/opt/hive/apache-hive-3.1.3-bin/warehouse/mydb.db
 
 -- Tabla Fecha
 CREATE TABLE IF NOT EXISTS Fecha (
-  idFecha INT,
+  idFecha BIGINT,
   temporada STRING,
   dia INT,
   mes INT,
@@ -43,7 +43,7 @@ LOCATION 'hdfs://localhost:9000/opt/hive/apache-hive-3.1.3-bin/warehouse/mydb.db
 
 -- Tabla Ubicacion
 CREATE TABLE IF NOT EXISTS Ubicacion (
-  idUbicacion INT,
+  idUbicacion BIGINT,
   capacidad STRING,
   arena STRING,
   ciudad STRING,
@@ -54,7 +54,7 @@ LOCATION 'hdfs://localhost:9000/opt/hive/apache-hive-3.1.3-bin/warehouse/mydb.db
 
 -- Tabla Jugador
 CREATE TABLE IF NOT EXISTS Jugador (
-  idJugador INT,
+  idJugador BIGINT,
   altura STRING,
   peso STRING,
   nombre STRING,
@@ -72,14 +72,14 @@ LOCATION 'hdfs://localhost:9000/opt/hive/apache-hive-3.1.3-bin/warehouse/mydb.db
 
 -- Tabla Partido
 CREATE TABLE IF NOT EXISTS Partido (
-  idPartido INT,
-  idEquipo_Local INT,
-  idEquipo_Visitante INT,
-  idArbitro INT,
-  idLiga INT,
-  idFecha INT,
-  idUbicacion INT,
-  idJugador INT,
+  idPartido BIGINT,
+  idEquipo_Local BIGINT,
+  idEquipo_Visitante BIGINT,
+  idArbitro BIGINT,
+  idLiga BIGINT,
+  idFecha BIGINT,
+  idUbicacion BIGINT,
+  idJugador BIGINT,
   Puntos_Totales INT,
   Saques_Exitosos INT,
   Saques_Fallidos INT,

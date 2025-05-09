@@ -37,6 +37,8 @@ aux1_df = aux1_df.select("team_id","arena", "arenacapacity") \
 # Hacemos Join de las diferentes tablas de datos
 df = df.join(aux1_df, on="team_id", how="left")
 
+# Categorizamos la capacidad de la arena en diferentes tamaños
+
 # Eliminar duplicados y generar la id de la tabla
 df = df.dropDuplicates(["id"]) \
     .withColumn("idUbicacion", functions.monotonically_increasing_id())
