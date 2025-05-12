@@ -17,7 +17,7 @@ spark = SparkSession.builder \
  
 # Generamos la fecha inicial y final de la NBA (segun los datos usados)
 fecha_inicial = "1946-01-01"
-fecha_final = "2019-12-31"
+fecha_final = "2023-12-31"
 
 # Calculamos el numero total de dias
 inicio = datetime.strptime(fecha_inicial, "%Y-%m-%d")
