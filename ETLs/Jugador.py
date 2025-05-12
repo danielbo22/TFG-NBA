@@ -64,7 +64,7 @@ aux1_df = aux1_df.select("person_id", "display_first_last", "school", "country",
 
 aux2_df = aux2_df.select("player_id","first_name", "last_name", "team_city", "team_name")
 
-aux3_df = aux3_df.select("player_id","player_name", "position", "height_wo_shoes", "wingspan", "weight") \
+aux3_df = aux3_df.select("player_id","player_name", "position", "height_wo_shoes", "wingspan", "weight", "standing_reach") \
        .withColumnRenamed("player_name", "nombre") \
 
 # Generamos el nombre del equipo en cada df
@@ -90,21 +90,36 @@ df = df1.union(df2).union(df3)
 
 # Hacemos Join de las tablas principales de datos de jugadores
 df = df.join(aux0_df, on="player_id", how="left")
-df = df.join(aux1_df, on="player_id", how="left")
 df = df.join(aux2_df, on="player_id", how="left")
+df = df.join(aux1_df, on="player_id", how="left")
 df = df.join(aux3_df, on="player_id", how="left")
+
+# Paso de valores de unidades de medidas estadounidenses a estandar
+df = df.withColumn("peso", col("weight") * 0.45359237) \
+       .withColumn("altura", col("height_wo_shoes") * 0.0254) \
+       .withColumn("envergadura", col("wingspan") * 0.0254) \
+       .withColumn("alcance_pie", col("standing_reach") * 0.0254)
+
+# Obtención de valores de carrera_profesional
+df = df.withColumn("carrera_profesional", col("to_year") - col("from_year"))
 
 # Categorizacion de peso
 
+
 # Categorizacion de altura 
+
 
 # Categorizacion de envergadura
 
+
 # Categorizacion de alcance_pie
+
 
 # Categorizacion carrera_profesional
 
+
 # Dar valor al estado_actual
+
 
 # Dar valor a la posicion(quitar valor abreviado por uno normal)
 
@@ -126,4 +141,4 @@ df = df.select("idJugador", "nombre", "equipo", "escuela", "pais", )
 df.show()
 
 # Almacenamos el resultado en Hive
-df.write.mode("overwrite").insertInto("mydb.jugador")
+df.write.mode("overwrite").saveAsTable("mydb.jugador")
