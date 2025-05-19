@@ -104,14 +104,8 @@ abreviaturas_regex = r"\b[A-Za-z]{2,5}\."
 multiples_regex = r"\b\d+ of \d+\b"
 regex_total = f"{nombres_regex}|{parentesis_regex}|{equipos_regex}|{equipos_mayus_regex}|{extras_regex}|{abreviaturas_regex}|{multiples_regex}"
 
-
 # Compilamos una sola vez el patrón
 patron = re.compile(regex_total)
-
-# nombres_fragmentos = set()
-# for nombre in nombres:
-#     for parte in nombre.split():
-#         nombres_fragmentos.add(parte)
 
 # Función para limpiar cada jugada de los nombres
 def eliminar_nombres(texto):
@@ -156,12 +150,13 @@ aux3_df = aux3_df.filter(contiene_nombre_udf(col("descripcion")))
 # Eliminamos descripciones duplicadas
 df = aux3_df.dropDuplicates(["descripcion_limpia"])
 
+# Generamos un diccionario con abreviaturas conocidas para eliminar
+
 # Generamos una id
 df = df.withColumn("idJugada", functions.monotonically_increasing_id())
 
 # Seleccionamos los datos que buscamos
-df = df.select("idJugada", "descripcion_limpia", "descripcion") 
-
+df = df.select("idJugada", "descripcion_limpia") 
 
 # Pasamos el dataset a pandas y lo convertimos a csv
 pandas_df = df.toPandas()
