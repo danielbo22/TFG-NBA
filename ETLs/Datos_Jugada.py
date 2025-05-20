@@ -5,7 +5,7 @@ from pyspark.sql import functions, Window, udf
 import pandas as pd
 import re
 
-from pyspark.sql.functions import concat_ws, col, row_number, when
+from pyspark.sql.functions import concat_ws, col, row_number, when, lower, regexp_replace, trim
 from pyspark.sql.types import IntegerType, StringType, BooleanType
 
 #mysql-connector-j-9.3.0.jar
@@ -150,13 +150,50 @@ aux3_df = aux3_df.filter(contiene_nombre_udf(col("descripcion")))
 # Eliminamos descripciones duplicadas
 df = aux3_df.dropDuplicates(["descripcion_limpia"])
 
-# Generamos un diccionario con abreviaturas conocidas para eliminar
+# Generamos una lista con alias conocidos para eliminar
+alias = [
+    "N'Dong", "Yuezhuo", "zhi", "Tompkins", "McClellan", "Renfroe", "Kanter", "Lima",
+    "Seung", "Jin", "Pendergraph", "McKinney", "Yue", "Arna", "Hersek", "McLean",
+    "N'Diaye", "Maciulis", "McRay", "Yurtseven", "Llull"
+]
+
+# Recorremos cada alias y lo eliminamos de las descripciones
+for nombre in alias:
+    nombre_regex = nombre.replace("'", "\\'")
+    
+    df = df.withColumn(
+        "descripcion_limpia",
+        regexp_replace("descripcion_limpia", f"\\b{nombre_regex}\\b", "")
+    )
+
+# Generamos una lista con palabras con datos innecesarios de las descripciones
+palabras_innecesarias = [
+    "Running", "Driving", "Pullup", "Step Back", "Fadeaway", "Floating", "Putback",
+    "Reverse", "Cutting", "Follow Up", "Bank", "Alley Oop",
+    "Turnaround", "Hook", "Tip", "Jumper"
+]
+
+# Recorremos cada alias y lo eliminamos de las descripciones
+for palabra in palabras_innecesarias:
+    palabra_regex = palabra.replace("'", "\\'")
+    
+    df = df.withColumn(
+        "descripcion_limpia",
+        regexp_replace("descripcion_limpia", f"\\b{palabra_regex}\\b", "")
+    )
+
+# Limpiamos los espacios en blanco de las descripciones
+df = df.withColumn("descripcion_limpia", regexp_replace("descripcion_limpia", " +", " "))
+df = df.withColumn("descripcion_limpia", trim("descripcion_limpia"))
+
+# Eliminamos descripciones duplicadas
+df = df.dropDuplicates(["descripcion_limpia"])
 
 # Generamos una id
 df = df.withColumn("idJugada", functions.monotonically_increasing_id())
 
 # Seleccionamos los datos que buscamos
-df = df.select("idJugada", "descripcion_limpia") 
+df = df.select("idJugada", "descripcion_limpia", "descripcion") 
 
 # Pasamos el dataset a pandas y lo convertimos a csv
 pandas_df = df.toPandas()

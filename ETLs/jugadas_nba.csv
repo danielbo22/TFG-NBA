@@ -1,438 +1,115 @@
-idJugada,descripcion_limpia
-0,MISS Putback Slam Dunk
-1,N'Dong Dunk
-2,MISS Driving Jump Shot
-3,Yuezhuo FOUL
-4,MISS 3PT Fadeaway Bank Shot
-5,Violation Lane
-6,zhi Jump Shot
-7,MISS 3PT Driving Hook Shot
-8,SUB Tompkins FOR
-9,Jump McClellan Tip to
-10,MISS Jump Bank Hook Shot
-11,SUB Renfroe FOR
-12,3PT Shot
-13,MISS 3PT Pullup Bank Shot
-14,Fadeaway Bank Shot
-15,Running Reverse Dunk Shot
-16,MISS 3PT Turnaround Fadeaway Bank Jump Shot
-17,MISS Hook Shot
-18,MISS Jump Bank Shot
-19,No Shot
-20,Out of Bounds Bad Pass Turnover Turnover
-21,3PT Finger Roll
-22,Poss Lost Turnover
-23,Turnover Turnover
-24,Kanter Poss Lost Turnover
-25,Lima BLOCK
-26,from Below Turnover
-27,Ejection Second Technical
-28,zhi Traveling Turnover
-29,3PT Pullup Jump Shot
-30,Jump Hook Shot
-31,MISS Running Alley Oop Layup Shot
-32,MISS 3PT Dunk
-33,MISS Free Throw Technical
-34,3PT Running Jump Shot
-35,5 Second Violation Turnover
-36,zhi Hook Shot
-37,Layup
-38,3PT Driving Floating Jump Shot
-39,Floating Jump Shot
-40,Running Alley Oop Layup Shot
-41,Step Back Jump Shot
-42,zhi REBOUND
-43,Driving Floating Jump Shot
-44,Non Unsportsmanlike
-45,SUB zhi FOR
-46,Shot
-47,3PT Hook Shot
-48,3PT Turnaround Jump Shot
-49,MISS 3PT Finger Roll Layup
-50,MISS Driving Floating Bank Jump Shot
-51,Running Bank Shot
-52,MISS 3PT Reverse Layup
-53,MISS 3PT Hook Shot
-54,MISS 3PT Step Back Jump Shot
-55,Putback Slam Dunk
-56,Turnaround Bank Shot
-57,3PT Fadeaway Bank Shot
-58,Kanter Cutting Layup Shot
-59,Kanter Out of Bounds Lost Turnover
-60,MISS 3PT Finger Roll
-61,MISS zhi Tip Shot
-62,SUB FOR Yuezhuo
-63,HANGING FOUL
-64,Illegal Assist Turnover
-65,MISS zhi Turnaround Jump Shot
-66,Kanter Driving Floating Bank Jump Shot
-67,Running Hook Shot
-68,Seung Jin Layup
-69,Driving Bank Hook Shot
-70,MISS Cutting Layup Shot
-71,SUB Kanter FOR
-72,zhi Poss Lost Turnover
-73,3PT Driving Jump Shot
-74,Free Throw Technical
-75,MISS Driving Finger Roll Layup
-76,MISS Layup
-77,Kanter Jump Shot
-78,MISS Free Throw Clear Path
-79,MISS Driving Slam Dunk
-80,McClellan Driving Floating Jump Shot
-81,Jump Kanter Tip to Kanter
-82,Kanter Violation Kicked
-83,MISS zhi Free Throw
-84,Pendergraph Poss Lost Turnover
-85,Violation No Violation
-86,SUB FOR McClellan
-87,SUB FOR zhi
-88,FLAGRANT TYPE1
-89,MISS McKinney Free Throw
-90,zhi BLOCK
-91,MISS 3PT Driving Floating Bank Jump Shot
-92,MISS 3PT Step Back Bank Jump Shot
-93,Reverse Layup
-94,SUB FOR N'Dong
-95,SUB FOR Yue
-96,Jump N'Dong Tip to
-97,Jump Tip to Yue
-98,Kanter 3PT Jump Shot
-99,Kanter Floating Jump Shot
-100,MISS Hook Bank Shot
-101,Seung Jin Driving Finger Roll
-102,Seung Jin Dunk
-103,Seung Jin Lost Turnover
-104,3PT Putback Layup
-105,MISS Step Back Jump Shot
-106,MISS zhi Jump Shot
-107,MISS Pullup Bank Shot
-108,Yue Jump Shot
-109,Kanter Dunk
-110,MISS zhi Running Jump Shot
-111,Violation Double Lane
-112,Running Jump Shot
-113,Yue Layup
-114,Driving Floating Bank Jump Shot
-115,Out of Bounds Lost Turnover
-116,SUB FOR
-117,Ejection No Ejection
-118,Follow Up Dunk
-119,N'Dong Turnaround Jump Shot
-120,Pendergraph Layup
-121,Running Slam Dunk
-122,MISS Shot
-123,Jump Tip to
-124,Alley Oop Layup
-125,Isolation Violation Turnover
-126,Pendergraph Turnaround Fadeaway
-127,MISS Running Bank Hook Shot
-128,REBOUND
-129,Foul Turnover
-130,MISS 3PT Driving Floating Jump Shot
-131,MISS Free Throw Flagrant
-132,SUB Arna FOR
-133,Lost Turnover
-134,McClellan Driving Layup
-135,MISS 3PT Turnaround Jump Shot
-136,3PT Running Bank Shot
-137,Driving Layup
-138,Pendergraph Step Back Jump Shot
-139,MISS 3PT Turnaround Bank Shot
-140,Unknown Turnover
-141,MISS Running Alley Oop Dunk Shot
-142,Turnaround Fadeaway Bank Jump Shot
-143,Turnaround Hook Shot
-144,Foul
-145,MISS zhi Dunk
-146,3PT Step Back Bank Jump Shot
-147,STEAL
-148,3PT Running Bank Hook Shot
-149,Pendergraph Driving Dunk
-150,Pendergraph Hook Shot
-151,Running Finger Roll Layup
-152,Driving Hook Shot
-153,Running Alley Oop Dunk Shot
-154,zhi Turnaround Jump Shot
-155,SUB Seung Jin FOR
-156,Turnaround Jump Shot
-157,MISS Free Throw
-158,Step Out of Bounds Turnover
-159,McLean BLOCK
-160,Reverse Dunk
-161,Running Bank Hook Shot
-162,SUB FOR Pendergraph
-163,zhi Lane Violation Turnover
-164,Jump Kanter Tip to
-165,MISS Running Slam Dunk
-166,Pendergraph Fadeaway Jumper
-167,MISS Turnaround Jump Shot
-168,MISS 3PT Fadeaway Jumper
-169,Running Tip Shot
-170,Step Back Bank Jump Shot
-171,3PT Reverse Layup
-172,MISS 3PT Running Jump Shot
-173,Pendergraph Lost Turnover
-174,Driving Reverse Dunk Shot
-175,MISS Running Layup
-176,N'Dong Layup
-177,Driving Slam Dunk
-178,Kicked
-179,Stolen Pass Turnover
-180,MISS Reverse Dunk
-181,SUB McClellan FOR
-182,Kanter Running Slam Dunk
-183,MISS 3PT Driving Bank Hook Shot
-184,3PT Floating Jump Shot
-185,Kanter Alley Oop Layup
-186,Kanter Reverse Dunk
-187,Kicked Violation Turnover
-188,MISS
-189,MISS Alley Oop Layup
-190,MISS Putback Layup
-191,McClellan Out of Bounds Lost Turnover
-192,SUB N'Dong FOR
-193,Kanter Running Reverse Layup
-194,SUB FOR Seung Jin
-195,Ejection First Flagrant Type 2
-196,zhi Violation Defensive Goaltending
-197,MISS Driving Finger Roll
-198,Opposite Turnover
-199,Tip Layup Shot
-200,MISS Turnaround Fadeaway Bank Jump Shot
-201,MISS Turnaround Fadeaway Shot
-202,Pendergraph Jump Shot
-203,Running Dunk
-204,Turnaround Bank Hook Shot
-205,zhi Reverse Layup
-206,Finger Roll Layup
-207,MISS Turnaround Bank Shot
-208,zhi Driving Dunk
-209,Kanter Cutting Finger Roll Layup Shot
-210,MISS Finger Roll
-211,Timeout Official
-212,Jump Tip to Kanter
-213,Kanter Driving Dunk
-214,MISS Driving Bank Shot
-215,Offensive Foul Turnover
-216,Pullup Bank Shot
-217,SUB FOR N'Diaye
-218,MISS Turnaround Finger Roll
-219,Putback Reverse Dunk
-220,Jump Bank Shot
-221,Jump Tip to McClellan
-222,MISS Slam Dunk
-223,Shooting Block Foul
-224,Tip Dunk Shot
-225,Cutting Layup Shot
-226,Kanter Alley Oop Dunk
-227,Running Layup
-228,3PT Turnaround Bank Hook Shot
-229,Alley Oop Dunk
-230,Jump Shot
-231,MISS Running Reverse Layup
-232,Putback Dunk
-233,Violation Delay Of Game
-234,zhi Dunk
-235,Palming Turnover
-236,MISS Reverse Slam Dunk
-237,McKinney Foul
-238,zhi Bad Pass Turnover
-239,Ejection Second Flagrant Type 1
-240,McClellan Driving Finger Roll Layup
-241,Pendergraph Out of Bounds Lost Turnover
-242,Slam Dunk
-243,Traveling Turnover
-244,MISS zhi Driving Layup
-245,Bad Pass Turnover
-246,Finger Roll
-247,MISS Tip Shot
-248,MISS 3PT Driving Finger Roll
-249,Seung Jin Jump Shot
-250,3PT Step Back Jump Shot
-251,MISS No Shot
-252,Backcourt Turnover
-253,Pendergraph Slam Dunk
-254,Pullup Jump Shot
-255,SUB FOR Renfroe
-256,MISS Running Dunk
-257,Ejection Other
-258,zhi Free Throw
-259,MISS zhi Hook Shot
-260,Offensive Goaltending Turnover
-261,zhi FOUL
-262,FLAGRANT TYPE2
-263,MISS 3PT Jump Bank Shot
-264,MISS 3PT Running Bank Shot
-265,zhi Violation Lane
-266,MISS 3PT Hook Bank Shot
-267,MISS Driving Reverse Dunk Shot
-268,Pendergraph Driving Slam Dunk
-269,3PT Fadeaway Jumper
-270,MISS Running Bank Shot
-271,Cutting Dunk Shot
-272,Jump Tip to zhi
-273,Swinging Elbows Turnover
-274,Jump zhi Tip to
-275,MISS Putback Reverse Dunk
-276,Running Pull Up Jump Shot
-277,SUB Hersek FOR
-278,MISS Cutting Finger Roll Layup Shot
-279,Seung Jin Out of Bounds Lost Turnover
-280,zhi Foul Turnover
-281,3PT Turnaround Fadeaway Bank Jump Shot
-282,Driving Dunk
-283,zhi Tip Shot
-284,Kanter Slam Dunk
-285,MISS Finger Roll Layup
-286,MISS Driving Floating Jump Shot
-287,MISS Putback Dunk
-288,FOUL
-289,Kanter Cutting Dunk Shot
-290,Kanter Violation Lane
-291,3PT Jump Bank Shot
-292,Free Throw Flagrant
-293,MISS Running Reverse Dunk Shot
-294,McClellan 3PT Jump Shot
-295,Driving Reverse Layup
-296,Jump Violation
-297,Lane Violation Turnover
-298,3PT Layup
-299,Kanter FLAGRANT TYPE1
-300,MISS Jump Hook Shot
-301,Running Finger Roll
-302,SUB McKinney FOR
-303,Jump Seung Jin Tip to
-304,Kanter Running Finger Roll Layup
-305,Double Dribble Turnover
-306,MISS Fadeaway Jumper
-307,Taunting
-308,Player Out of Bounds Violation Turnover
-309,MISS Driving Bank Hook Shot
-310,Fadeaway Jumper
-311,MISS 3PT Turnaround Hook Shot
-312,MISS Alley Oop Dunk
-313,McClellan Lost Turnover
-314,No Turnover
-315,Putback Layup
-316,MISS Running Finger Roll Layup
-317,Dunk
-318,8 Second Violation Turnover
-319,Tip Shot
-320,3PT Pullup Bank Shot
-321,MISS Step Back Bank Jump Shot
-322,zhi Running Hook Shot
-323,MISS Turnaround Bank Hook Shot
-324,Offensive Charge Foul
-325,BLOCK
-326,Ejection
-327,McKinney Free Throw
-328,Jump Violation Turnover
-329,Punched Turnover
-330,SUB FOR Kanter
-331,zhi STEAL
-332,MISS 3PT Shot
-333,Driving Finger Roll Layup
-334,Pendergraph Alley Oop Dunk
-335,Kanter Lost Turnover
-336,MISS Dunk
-337,McClellan Driving Reverse Layup
-338,SUB Yue FOR
-339,SUB Yurtseven FOR
-340,Jump Bank Hook Shot
-341,Kanter Running Layup
-342,zhi Foul
-343,zhi Running Jump Shot
-344,Jump
-345,Jump Pendergraph Tip to
-346,Personal Take Foul
-347,3PT Driving Floating Bank Jump Shot
-348,MISS 3PT Tip Shot
-349,MISS 3PT Turnaround Fadeaway Shot
-350,3PT Jump Shot
-351,MISS 3PT Jump Shot
-352,SUB Maciulis FOR
-353,MISS Running Tip Shot
-354,Violation Jump
-355,Free Throw
-356,McKinney Jump Shot
-357,Turnaround Fadeaway
-358,Turnaround Finger Roll
-359,Driving Bank Shot
-360,MISS 3PT Driving Jump Shot
-361,SUB McRay FOR
-362,MISS Fadeaway Bank Shot
-363,MISS Running Hook Shot
-364,zhi Driving Layup
-365,MISS Driving Reverse Layup
-366,MISS Layup BLOCK
-367,Out Of Bounds Turnover
-368,zhi Lost Turnover
-369,Kanter Driving Hook Shot
-370,MISS Cutting Dunk Shot
-371,McClellan Layup
-372,Post Up Turnover
-373,3PT No Shot
-374,MISS 3PT Floating Jump Shot
-375,SUB Yuezhuo FOR
-376,Shot Clock Turnover
-377,Cutting Finger Roll Layup Shot
-378,MISS Tip Layup Shot
-379,MISS zhi Fadeaway Jumper
-380,zhi 3PT Jump Shot
-381,MISS 3PT Running Hook Shot
-382,zhi Slam Dunk
-383,3 Second Violation Turnover
-384,MISS Driving Layup
-385,MISS Tip Dunk Shot
-386,Violation Defensive Goaltending
-387,MISS Floating Jump Shot
-388,MISS Jump Shot
-389,MISS 3PT Pullup Jump Shot
-390,MISS Running Jump Shot
-391,McClellan Cutting Dunk Shot
-392,Driving Finger Roll
-393,MISS 3PT Driving Layup
-394,3PT Running Pull Up Jump Shot
-395,MISS Pullup Jump Shot
-396,MISS Running Finger Roll
-397,3PT Turnaround Bank Shot
-398,Discontinue Dribble Turnover
-399,Jump N'Diaye Tip to
-400,Kanter Driving Finger Roll Layup
-401,N'Dong Jump Shot
-402,McKinney Foul Turnover
-403,3PT Driving Bank Shot
-404,N'Dong Lost Turnover
-405,3PT Turnaround Fadeaway
-406,MISS Follow Up Dunk
-407,MISS Reverse Layup
-408,MISS Driving Hook Shot
-409,MISS zhi 3PT Jump Shot
-410,Delay
-411,Free Throw Clear Path
-412,MISS 3PT Running Pull Up Jump Shot
-413,MISS Running Pull Up Jump Shot
-414,Running Reverse Layup
-415,Violation Kicked
-416,MISS 3PT Layup
-417,N'Dong Driving Finger Roll
-418,Illegal Pick Turnover
-419,MISS 3PT Running Layup
-420,McClellan Jump Shot
-421,SUB N'Diaye FOR
-422,Illegal Screen Turnover
-423,MISS Driving Dunk
-424,SUB Pendergraph FOR
-425,Hook Bank Shot
-426,MISS 3PT No Shot
-427,Reverse Slam Dunk
-428,SUB Llull FOR
-429,zhi Layup
-430,MISS zhi Layup
-431,Driving Jump Shot
-432,Hook Shot
-433,Personal Block Foul
-434,Inbound Turnover
-435,Renfroe Lost Turnover
-436,Timeout No Timeout
+idJugada,descripcion_limpia,descripcion
+0,,Van Horn  Driving Finger Roll (4 PTS) (Kittles 2 AST)
+1,3 Second Violation Turnover,O'Neal 3 Second Violation Turnover (P2.T13)
+2,3PT,Stojakovic 24' 3PT Fadeaway Jumper (10 PTS)
+3,3PT Jump Shot,Wright 48' 3PT Driving Floating Bank Jump Shot (3 PTS) (VanVleet 1 AST)
+4,3PT Layup,Marbury  3PT Layup (12 PTS) (Gugliotta 7 AST)
+5,3PT No Shot,Fredette  3PT No Shot (15 PTS)
+6,3PT Pull Up Jump Shot,Rodriguez 25' 3PT Running Pull-Up Jump Shot (3 PTS)
+7,3PT Shot,Curry 29' 3PT Driving Bank Shot (20 PTS)
+8,5 Second Violation Turnover,Anderson 5 Second Violation Turnover (P1.T4)
+9,8 Second Violation Turnover,Pack 8 Second Violation Turnover (P2.T9)
+10,BLOCK,Mercer BLOCK (1 BLK)
+11,Backcourt Turnover,Anderson Backcourt Turnover (P1.T2)
+12,Bad Pass Turnover,Walker Bad Pass Turnover (P2.T6)
+13,Delay,Malone Delay (P3.PN)
+14,Discontinue Dribble Turnover,Williams Discontinue Dribble Turnover (P1.T16)
+15,Double Dribble Turnover,Knight Double Dribble Turnover (P2.T7)
+16,Dunk,Swift  Alley Oop Dunk (4 PTS) (Battier 3 AST)
+17,Dunk Shot,Covington  Cutting Dunk Shot (12 PTS) (Stauskas 3 AST)
+18,Ejection,Stoudemire Ejection:
+19,Ejection First Flagrant Type 2,Horry Ejection:First Flagrant Type 2
+20,Ejection No Ejection,Kersey Ejection:No Ejection
+21,Ejection Other,Potapenko Ejection:Other
+22,Ejection Second Flagrant Type 1,Wallace Ejection:Second Flagrant Type 1
+23,Ejection Second Technical,Sabonis Ejection:Second Technical
+24,FLAGRANT TYPE1,Oakley FLAGRANT.FOUL.TYPE1 (P3.PN)
+25,FLAGRANT TYPE2,Horry FLAGRANT.FOUL.TYPE2 (P3.T1)
+26,FOUL,McCarty S.FOUL (P1.PN)
+27,Foul,Mercer OFF.Foul (P3)
+28,Foul Turnover,Mercer Foul Turnover (P1.T11)
+29,Free Throw,Walker Free Throw 1 of 1 (21 PTS)
+30,Free Throw Clear Path,Mercer Free Throw Clear Path (7 PTS)
+31,Free Throw Flagrant,Mercer Free Throw Flagrant 1 of 2 (8 PTS)
+32,Free Throw Technical,Person Free Throw Technical (12 PTS)
+33,HANGING FOUL,Finley HANGING.TECH.FOUL (P1.T3)
+34,Illegal Assist Turnover,Reeves Illegal Assist Turnover (P2.T10)
+35,Illegal Pick Turnover,Henderson Illegal Pick Turnover (P3.T18)
+36,Illegal Screen Turnover,James Illegal Screen Turnover (P1.T5)
+37,Inbound Turnover,Askew Inbound Turnover (P2.T6)
+38,Isolation Violation Turnover,Ferrell Isolation Violation Turnover (P1.T7)
+39,Jump,Jump Ball
+40,Jump Shot,Westbrook 3' Driving Floating Bank Jump Shot (12 PTS)
+41,Jump Violation,Jump Ball Violation
+42,Jump Violation Turnover,Jones Jump Ball Violation Turnover (P2.T23)
+43,Jump to,Jump Ball Kanter vs. Mark Morris: Tip to Frye
+44,Kicked,Kicked Ball
+45,Kicked Violation Turnover,Montross Kicked Ball Violation Turnover (P1.T1)
+46,Lane Violation Turnover,O'Neal Lane Violation Turnover (P1.T2)
+47,Layup,Scott Alley Oop Layup (6 PTS) (Van Exel 10 AST)
+48,Layup Shot,Clark 1' Cutting Finger Roll Layup Shot (17 PTS) (McAdoo 1 AST)
+49,Lost Turnover,Kanter Lost Ball Turnover (P1.T5)
+50,MISS,MISS Mason Jr.
+51,MISS 3PT,MISS Richardson 27' 3PT Driving Finger Roll
+52,MISS 3PT Dunk,MISS Durant  3PT Dunk
+53,MISS 3PT Jump Shot,MISS Carroll 40' 3PT Driving Floating Bank Jump Shot
+54,MISS 3PT Layup,MISS Redick  3PT Driving Layup
+55,MISS 3PT No Shot,MISS Lowry 25' 3PT No Shot
+56,MISS 3PT Pull Up Jump Shot,MISS Delaney 26' 3PT Running Pull-Up Jump Shot
+57,MISS 3PT Shot,MISS Scola 38' 3PT Driving Bank Hook Shot
+58,MISS Dunk,MISS Hughes  Alley Oop Dunk
+59,MISS Dunk Shot,MISS James  Cutting Dunk Shot
+60,MISS Free Throw,MISS Mercer Free Throw 1 of 2
+61,MISS Free Throw Clear Path,MISS Morris Free Throw Clear Path
+62,MISS Free Throw Flagrant,MISS Marbury Free Throw Flagrant 1 of 2
+63,MISS Free Throw Technical,MISS Jones Free Throw Technical
+64,MISS Jump Shot,MISS Payton 5' Driving Floating Bank Jump Shot
+65,MISS Layup,MISS Davis  Alley Oop Layup
+66,MISS Layup BLOCK,MISS Jordan 3' Layup BLOCK (1 BLK)
+67,MISS Layup Shot,MISS Thompson 6' Cutting Finger Roll Layup Shot
+68,MISS No Shot,MISS Reeves  No Shot
+69,MISS Pull Up Jump Shot,MISS Schroder 21' Running Pull-Up Jump Shot
+70,MISS Shot,MISS Parker 7' Driving Bank Hook Shot
+71,MISS Slam Dunk,MISS Young  Driving Slam Dunk
+72,No Shot,Reeves  No Shot (14 PTS)
+73,No Turnover,Mihm No Turnover (P1.T2)
+74,Non Unsportsmanlike,Webber Non-Unsportsmanlike (P0.T2)
+75,Offensive Charge Foul,Allen Offensive Charge Foul (P4.T2)
+76,Offensive Foul Turnover,Curry Offensive Foul Turnover (P1.T1)
+77,Offensive Goaltending Turnover,Thorpe Offensive Goaltending Turnover (P4.T17)
+78,Opposite Turnover,Ostertag Opposite Basket Turnover (P1.T3)
+79,Out Of Bounds Turnover,Kemp Out Of Bounds Turnover (P4.T5)
+80,Out of Bounds Bad Pass Turnover Turnover,Dragic Out of Bounds - Bad Pass Turnover Turnover (P1.T5)
+81,Out of Bounds Lost Turnover,Kanter Out of Bounds Lost Ball Turnover (P1.T4)
+82,Palming Turnover,Ward Palming Turnover (P1.T7)
+83,Personal Block Foul,Cardinal Personal Block Foul (P2.T4)
+84,Personal Take Foul,Johnson Personal Take Foul (P1.T3)
+85,Player Out of Bounds Violation Turnover,Wade Player Out of Bounds Violation Turnover (P1.T2)
+86,Poss Lost Turnover,Kanter Poss Lost Ball Turnover (P1.T8)
+87,Post Up Turnover,Mobley Post Up Turnover (P4.T17)
+88,Pull Up Jump Shot,Jackson 12' Running Pull-Up Jump Shot (13 PTS)
+89,Punched Turnover,Lopez Punched Ball Turnover (P2.T7)
+90,REBOUND,Thomas REBOUND (Off:1 Def:0)
+91,STEAL,Billups STEAL (2 STL)
+92,SUB FOR,SUB: Arna FOR Bogdanovic
+93,Shooting Block Foul,Chandler Shooting Block Foul (P4.T4)
+94,Shot,Krstic 4' Driving Bank Hook Shot (2 PTS) (Carter 3 AST)
+95,Shot Clock Turnover,Rider Shot Clock Turnover (P1.T9)
+96,Slam Dunk,Butler 2' Driving Slam Dunk (10 PTS) (Arenas 1 AST)
+97,Step Out of Bounds Turnover,Francis Step Out of Bounds Turnover (P1.T10)
+98,Stolen Pass Turnover,Sesay Stolen Pass Turnover (P1.T2)
+99,Swinging Elbows Turnover,Potapenko Swinging Elbows Turnover (P3.T11)
+100,Taunting,Austin Taunting (P2.T2)
+101,Timeout No Timeout,Smith Timeout:No Timeout
+102,Timeout Official,Clark Timeout:Official
+103,Traveling Turnover,Jones Traveling Turnover (P1.T1)
+104,Turnover Turnover,Claxton Turnover Turnover (P3.T14)
+105,Unknown Turnover,Nash Unknown Turnover (P2.T15)
+106,Violation Defensive Goaltending,Hammonds Violation:Defensive Goaltending
+107,Violation Delay Of Game,Gatling Violation:Delay Of Game
+108,Violation Double Lane,Martin Violation:Double Lane
+109,Violation Jump,Mitchell Violation:Jump Ball
+110,Violation Kicked,Kanter Violation:Kicked Ball
+111,Violation Lane,Kanter Violation:Lane (C.Washington)
+112,Violation No Violation,Andersen Violation:No Violation
+113,from Below Turnover,Taylor Basket from Below Turnover (P5.T16)
