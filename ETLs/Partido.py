@@ -2,7 +2,7 @@ import pyspark
 from pyspark.sql import SparkSession
 from pyspark.sql import functions, Window
 
-from pyspark.sql.functions import concat_ws, col, row_number, split, when, lit, coalesce, to_timestamp, dayofmonth, month, year
+from pyspark.sql.functions import concat_ws, col, row_number, split, when, lit, coalesce, to_timestamp, dayofmonth, month, year, lower, explode, array
 
 #mysql-connector-j-9.3.0.jar
 
@@ -32,17 +32,17 @@ aux1_df = spark.read.option("delimiter", ",") \
 
 # Seleccionar los datos de jugadas con los jugadores y equipos que las hacen
 df1 = df.select("game_id", "player1_name", "player1_team_city", "player1_team_nickname") \
-       .withColumnRenamed("player1_name", "nombre") \
+       .withColumnRenamed("player1_name", "nombre_jugador") \
        .withColumnRenamed("player1_team_city", "equipo_ciudad") \
        .withColumnRenamed("player1_team_nickname", "equipo_sobrenombre")  
 
 df2 = df.select("game_id", "player2_name", "player2_team_city", "player2_team_nickname") \
-       .withColumnRenamed("player2_name", "nombre") \
+       .withColumnRenamed("player2_name", "nombre_jugador") \
        .withColumnRenamed("player2_team_city", "equipo_ciudad") \
        .withColumnRenamed("player2_team_nickname", "equipo_sobrenombre")  
 
 df3 = df.select("game_id", "player3_name", "player3_team_city", "player3_team_nickname") \
-       .withColumnRenamed("player3_name", "nombre") \
+       .withColumnRenamed("player3_name", "nombre_jugador") \
        .withColumnRenamed("player3_team_city", "equipo_ciudad") \
        .withColumnRenamed("player3_team_nickname", "equipo_sobrenombre")        
 
@@ -55,7 +55,10 @@ df3 = df3.withColumn("nombre_equipo", concat_ws(" ", col("equipo_ciudad"), col("
 df1 = df1.drop("equipo_ciudad", "equipo_sobrenombre")
 
 # Unimos todos los datos en un dataset
-df_jugadas = df1.union(df2).union(df3)
+df_jugadores = df1.union(df2).union(df3)
+
+# Eliminamos nombres de jugadores repretidos en el mismo partido
+df_jugadores = df_jugadores.dropDuplicates(["game_id", "nombre_jugador"])
 
 # Seleccionamos los datos requeridos del dataset de partidos
 df4 = aux0_df.select("game_id", "team_name_home", "team_name_away", "game_date", "season_type")
@@ -81,7 +84,7 @@ liga_df = spark.table("mydb.liga").select("idLiga", "nombre_mal")
 fecha_df = spark.table("mydb.fecha").select("idFecha", "dia", "mes", "ano")
 equipo_df = spark.table("mydb.equipo").select("idEquipo", "nombre", "arena", "ciudad", "estado")
 ubicacion_df = spark.table("mydb.ubicacion").select("idUbicacion", "arena", "ciudad", "estado")
-jugador_df = spark.table("mydb.jugador")
+jugador_df = spark.table("mydb.jugador").select("idJugador", "nombre")
 
 # Parte Arbitro #
 # Obtenemos la id del arbitro
@@ -150,10 +153,51 @@ df_partidos = df_partidos.join(
     how="left"
 ).drop(df_partidos.arena, df_partidos.ciudad, df_partidos.estado, ubicacion_df.arena, ubicacion_df.ciudad, ubicacion_df.estado)
 
-# Parte Jugador y jugadas #
+# Parte Jugador #
+# Unimos los datos de los jugadores con los del partido
+df_partidos = df_partidos.join(df_jugadores, on="game_id", how="inner")
 
+# Obtenemos la id a partir del nomvre de los jugadores en cada jugada
+df_partidos = df_partidos.join(
+    jugador_df,
+    df_partidos.nombre_jugador == jugador_df.nombre,
+    how="left"
+).drop(df_partidos.nombre_jugador, jugador_df.nombre)
 
+# Quitamos partidos sin jugadores asignados
+df_partidos = df_partidos.filter("idJugador IS NOT NULL")
 
+# Parte jugadas #
+# Obtenemos los datos de las jugadas
+df6 = df.select("game_id", "homedescription", "player1_name", "player2_name", "player3_name") \
+        .withColumnRenamed("homedescription", "descripcion") \
+
+df7 = df.select("game_id", "visitordescription", "player1_name", "player2_name", "player3_name") \
+        .withColumnRenamed("visitordescription", "descripcion") 
+
+# Unimos todas las descripciones
+df_jugadas = df6.union(df7)
+
+# Normalizamos las descripciones a minuscula 
+df_jugadas = df_jugadas.withColumn("descripcion", lower(col("descripcion")))
+
+# Habra que hacer el caso especifico para el saque 
+
+# Aplanamos los datos de las jugadas para cada jugador
+df_jugadas = df_jugadas.withColumn("jugador", explode(array("player1_name", "player2_name", "player3_name"))) \
+                      .filter(col("jugador").isNotNull()) \
+                      .select("game_id", "descripcion", "jugador")
+
+# Generacion de estadisticas generales(solo realizadas por un jugador) por cada jugada segun sus datos
+df_jugadas = df_jugadas \
+    .withColumn("tiro_triple_exitoso", when(
+        col("descripcion").contains("3pt") & ~col("descripcion").contains("miss"), 1).otherwise(0)) \
+    .withColumn("tiro_triple_fallido", when(
+        col("descripcion").contains("3pt") & col("descripcion").contains("miss"), 1).otherwise(0)) \
+    .withColumn("saque_exitoso", when(
+        col("descripcion").contains("jump ball") & col("descripcion").contains("receives"), 1).otherwise(0)) \
+    .withColumn("jugada_total", when(
+        col("descripcion").isNotNull(), 1).otherwise(0))
 
 
 
