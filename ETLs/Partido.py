@@ -2,7 +2,7 @@ import pyspark
 from pyspark.sql import SparkSession
 from pyspark.sql import functions, Window
 
-from pyspark.sql.functions import concat_ws, col, row_number, split, when, lit, coalesce, to_timestamp, dayofmonth, month, year, lower, explode, array
+from pyspark.sql.functions import concat_ws, col, row_number, split, when, lit, coalesce, to_timestamp, dayofmonth, month, year, lower, explode, array, sum, round
 
 #mysql-connector-j-9.3.0.jar
 
@@ -32,17 +32,17 @@ aux1_df = spark.read.option("delimiter", ",") \
 
 # Seleccionar los datos de jugadas con los jugadores y equipos que las hacen
 df1 = df.select("game_id", "player1_name", "player1_team_city", "player1_team_nickname") \
-       .withColumnRenamed("player1_name", "nombre_jugador") \
+       .withColumnRenamed("player1_name", "jugador") \
        .withColumnRenamed("player1_team_city", "equipo_ciudad") \
        .withColumnRenamed("player1_team_nickname", "equipo_sobrenombre")  
 
 df2 = df.select("game_id", "player2_name", "player2_team_city", "player2_team_nickname") \
-       .withColumnRenamed("player2_name", "nombre_jugador") \
+       .withColumnRenamed("player2_name", "jugador") \
        .withColumnRenamed("player2_team_city", "equipo_ciudad") \
        .withColumnRenamed("player2_team_nickname", "equipo_sobrenombre")  
 
 df3 = df.select("game_id", "player3_name", "player3_team_city", "player3_team_nickname") \
-       .withColumnRenamed("player3_name", "nombre_jugador") \
+       .withColumnRenamed("player3_name", "jugador") \
        .withColumnRenamed("player3_team_city", "equipo_ciudad") \
        .withColumnRenamed("player3_team_nickname", "equipo_sobrenombre")        
 
@@ -58,7 +58,7 @@ df1 = df1.drop("equipo_ciudad", "equipo_sobrenombre")
 df_jugadores = df1.union(df2).union(df3)
 
 # Eliminamos nombres de jugadores repretidos en el mismo partido
-df_jugadores = df_jugadores.dropDuplicates(["game_id", "nombre_jugador"])
+df_jugadores = df_jugadores.dropDuplicates(["game_id", "jugador"])
 
 # Seleccionamos los datos requeridos del dataset de partidos
 df4 = aux0_df.select("game_id", "team_name_home", "team_name_away", "game_date", "season_type")
@@ -160,9 +160,9 @@ df_partidos = df_partidos.join(df_jugadores, on="game_id", how="inner")
 # Obtenemos la id a partir del nomvre de los jugadores en cada jugada
 df_partidos = df_partidos.join(
     jugador_df,
-    df_partidos.nombre_jugador == jugador_df.nombre,
+    df_partidos.jugador == jugador_df.nombre,
     how="left"
-).drop(df_partidos.nombre_jugador, jugador_df.nombre)
+).drop(jugador_df.nombre)
 
 # Quitamos partidos sin jugadores asignados
 df_partidos = df_partidos.filter("idJugador IS NOT NULL")
@@ -181,30 +181,216 @@ df_jugadas = df6.union(df7)
 # Normalizamos las descripciones a minuscula 
 df_jugadas = df_jugadas.withColumn("descripcion", lower(col("descripcion")))
 
-# Habra que hacer el caso especifico para el saque 
+# Eliminamos jugadas vacias
+df_jugadas = df_jugadas.dropna("descripcion")
+
+# Caso especifico del saque
+# Obtenemos los saques existentes en las jugadas
+descripcion_saques = df_jugadas.filter(lower(col("descripcion")).contains("jump ball"))
+
+# Procesamos los datos de las jugadas
+saque_jugador1 = descripcion_saques.select(
+    col("game_id"),
+    col("player1_name").alias("jugador"),
+    lit(1).alias("Saques_Exitosos"),
+    lit(1).alias("Cantidad_Ataques_Exitosos"),
+    lit(0).alias("Saques_Fallidos"),
+    lit(0).alias("Cantidad_Ataques_Fallidos"),
+)
+
+saque_jugador2 = descripcion_saques.select(
+    col("game_id"),
+    col("player2_name").alias("jugador"),
+    lit(0).alias("Saques_Exitosos"),
+    lit(0).alias("Cantidad_Ataques_Exitosos"),
+    lit(1).alias("Saques_Fallidos"),
+    lit(1).alias("Cantidad_Ataques_Fallidos"),
+)
+
+saque_jugador3 = descripcion_saques.select(
+    col("game_id"),
+    col("player3_name").alias("jugador"),
+    lit(1).alias("Saques_Exitosos"),
+    lit(1).alias("Cantidad_Ataques_Exitosos"),
+    lit(0).alias("Saques_Fallidos"),
+    lit(0).alias("Cantidad_Ataques_Fallidos"),
+)
+
+# Unimos las 3 tablas para tener los saques totales
+saques_df = saque_jugador1.unionByName(saque_jugador2).unionByName(saque_jugador3)
 
 # Aplanamos los datos de las jugadas para cada jugador
 df_jugadas = df_jugadas.withColumn("jugador", explode(array("player1_name", "player2_name", "player3_name"))) \
                       .filter(col("jugador").isNotNull()) \
                       .select("game_id", "descripcion", "jugador")
 
+# Hacer estadisticas del tiro_doble cuando sepas los datos
 # Generacion de estadisticas generales(solo realizadas por un jugador) por cada jugada segun sus datos
 df_jugadas = df_jugadas \
     .withColumn("tiro_triple_exitoso", when(
         col("descripcion").contains("3pt") & ~col("descripcion").contains("miss"), 1).otherwise(0)) \
     .withColumn("tiro_triple_fallido", when(
         col("descripcion").contains("3pt") & col("descripcion").contains("miss"), 1).otherwise(0)) \
-    .withColumn("saque_exitoso", when(
-        col("descripcion").contains("jump ball") & col("descripcion").contains("receives"), 1).otherwise(0)) \
+    .withColumn("tiro_libre_exitoso", when(
+        col("descripcion").contains("free throw") & ~col("descripcion").contains("miss"), 1).otherwise(0)) \
+    .withColumn("tiro_libre_fallido", when(
+        col("descripcion").contains("free throw") & col("descripcion").contains("miss"), 1).otherwise(0)) \
+    .withColumn("robos_exitosos", when(
+        col("descripcion").contains("steal"), 1).otherwise(0)) \
+    .withColumn("tiros_bloqueados", when(
+        col("descripcion").contains("block"), 1).otherwise(0)) \
+    .withColumn("rebotes_obtenidos", when(
+        col("descripcion").contains("rebound"), 1).otherwise(0)) \
+    .withColumn("rebotes_defensivos_obtenidos", when(
+        col("descripcion").contains("rebound") & col("descripcion").contains("defensive"), 1).otherwise(0)) \
+    .withColumn("rebotes_ofensivos_obtenidos", when(
+        col("descripcion").contains("rebound") & col("descripcion").contains("offensive"), 1).otherwise(0)) \
+    .withColumn("perdidas_balon", when(
+        col("descripcion").contains("turnover") & ~col("descripcion").contains("foul"), 1).otherwise(0)) \
+    .withColumn("cambios_jugadores", when(
+        col("descripcion").contains("sub") & col("descripcion").contains("for"), 1).otherwise(0)) \
+    .withColumn("tiempos_muertos", when(
+        col("descripcion").contains("timeout"), 1).otherwise(0)) \
+    .withColumn("faltas_personales", when(
+        (col("descripcion").contains("p.foul")) |
+        (col("descripcion").contains("foul") & col("descripcion").contains("personal")), 1).otherwise(0)) \
+    .withColumn("faltas_balon_suelto", when(
+        col("descripcion").contains("l.b.foul"), 1).otherwise(0)) \
+    .withColumn("faltas_disparo", when(
+        col("descripcion").contains("s.foul"), 1).otherwise(0)) \
+    .withColumn("faltas_rebote", when(
+        col("descripcion").contains("foul turnover"), 1).otherwise(0)) \
+    .withColumn("faltas_ofensivas", when(
+        col("descripcion").contains("offensive") & col("descripcion").contains("foul"), 1).otherwise(0)) \
+    .withColumn("cantidad_ataques_fallidos", when(
+        col("descripcion").contains("miss"), 1).otherwise(0)) \
     .withColumn("jugada_total", when(
         col("descripcion").isNotNull(), 1).otherwise(0))
 
+# Agrupamos los datos #
+# Agrupamos datos generales
+df_estadisticas_finales = df_jugadas.groupBy("game_id", "idJugador").agg(
+    sum("tiro_triple_exitoso").alias("Tiros_Triples_Exitosos"),
+    sum("tiro_triple_fallido").alias("Tiros_Triples_Fallidos"),
+    sum("tiro_libre_exitoso").alias("Tiros_Libres_Exitosos"),
+    sum("tiro_libre_fallido").alias("Tiros_Libres_Fallidos"),
+    sum("robos_exitosos").alias("Robos_Exitosos"),
+    sum("tiros_bloqueados").alias("Tiros_Bloqueados"),
+    sum("rebotes_obtenidos").alias("Rebotes_Obtenidos"),
+    sum("rebotes_defensivos_obtenidos").alias("Rebotes_Defensivos_Obtenidos"),
+    sum("rebotes_ofensivos_obtenidos").alias("Rebotes_Ofensivos_Obtenidos"),
+    sum("perdidas_balon").alias("Perdidas_Balon"),
+    sum("cambios_jugadores").alias("Cambios_Jugadores"),
+    sum("tiempos_muertos").alias("Tiempos_Muertos"),
+    sum("faltas_personales").alias("Faltas_Personales"),
+    sum("faltas_balon_suelto").alias("Faltas_Balon_Suelto"),
+    sum("faltas_disparo").alias("Faltas_Disparo"),
+    sum("faltas_rebote").alias("Faltas_Rebote"),
+    sum("faltas_ofensivas").alias("Faltas_Ofensivas"),
+    sum("jugada_total").alias("Numero_Jugadas_Totales"),
+    sum("cantidad_ataques_fallidos").alias("Cantidad_Ataques_Fallidos")
+)
 
+# Agrupamos los datos de saques
+saques_df = saques_df.groupBy("game_id", "idJugador").agg(
+    sum("Saques_Exitosos").alias("Saques_Exitosos"),
+    sum("Cantidad_Ataques_Exitosos").alias("Cantidad_Ataques_Exitosos"),
+    sum("Saques_Fallidos").alias("Saques_Fallidos"),
+    sum("Cantidad_Ataques_Fallidos").alias("Cantidad_Ataques_Fallidos"),
+)
 
+# Juntar los datos de saques y generales #
+# Realizamos un koin entre las 2 tablas
+df_final = df_estadisticas_finales.join(
+    saques_df,
+    on=["game_id", "idJugador"],
+    how="outer"
+)
 
+# Sumamos los valores de la columna de ataques fallidos
+df_final = df_final.withColumn(
+    "Cantidad_Ataques_Fallidos",
+    coalesce(col("Cantidad_Ataques_Fallidos"), lit(0)) + coalesce(col("saques_df.Cantidad_Ataques_Fallidos"), lit(0))
+).drop("saques_df.Cantidad_Ataques_Fallidos")
 
+# Calculo de ataques exitosos #
+df_final = df_final.withColumn(
+    "Cantidad_Ataques_Exitosos",
+    col("Tiros_Triples_Exitosos") + col("Tiros_Dobles_Exitosos") + col("Tiros_Libres_Exitosos")
+)
 
+# Calculo probabilidades y puntos #
+df_final = df_final \
+.withColumn(
+    "Proporcion_Exito_Ataques",
+    round(col("Cantidad_Ataques_Exitosos") / col("Numero_Jugadas_Totales"), 3)
+).withColumn(
+    "Puntos_Totales",
+    col("Tiros_Triples_Exitosos")*3 + col("Tiros_Dobles_Exitosos")*2 + col("Tiros_Libres_Exitosos")
+)
 
+# Union de las estadisticas y las claves #
+# Unimos los datasets por el nombre del jugador y la game_id
+df_partido_completo = df_final.join(
+    df_partidos,
+    on=["game_id", "jugador"],
+    how="inner"
+)
+
+# Generar id_partido #
+# Crear un DataFrame con los game_id únicos y asignarles un idPartido incremental
+window_spec = Window.orderBy("game_id")
+
+df_ids_partido = df_partido_completo.select("game_id").distinct() \
+    .withColumn("idPartido", row_number().over(window_spec))
+
+# Unir la tabla total con los ids
+df_partido_completo = df_partido_completo.join(df_ids_partido, on="game_id", how="left")
+
+# Reorganizar la tabla #
+df_partido_completo = df_partido_completo.select(
+    "idPartido",
+    "idEquipo_Local",
+    "idEquipo_Visitante",
+    "idArbitro",
+    "idLiga",
+    "idFecha",
+    "idUbicacion",
+    "idJugador",
+    "Puntos_Totales",
+    "Saques_Exitosos",
+    "Saques_Fallidos",
+    "Tiros_Dobles_Exitosos",
+    "Tiros_Dobles_Fallidos",
+    "Tiros_Triples_Exitosos",
+    "Tiros_Triples_Fallidos",
+    "Tiros_Libres_Exitosos",
+    "Tiros_LIbres_Fallidos",
+    "Robos_Exitosos",
+    "Robos_Fallidos",
+    "Rebotes_Defensivos_Obtenidos",
+    "Rebotes_Ofensivos_Obtenidos",
+    "Rebotes_Obtenidos",
+    "Tiros_Bloqueados",
+    "Perdidas_Balon",
+    "Cambios_Jugadores",
+    "Tiempos_Muertos",
+    "Faltas_Personales",
+    "Faltas_Balon_Suelto",
+    "Faltas_Disparo",
+    "Faltas_Rebote",
+    "Faltas_Ofensivas",
+    "Numero_Jugadas_Totales",
+    "Cantidad_Ataques_Exitosos",
+    "Cantidad_Ataques_Fallidos",
+    "Proporcion_Exito_Ataques"
+)
+
+# Mostramos la tabla final #
+df_partido_completo.show()
+
+# Almacenamos el resultado en Hive #
+df_partido_completo.write.mode("overwrite").saveAsTable("mydb.partido")
 
 
 
