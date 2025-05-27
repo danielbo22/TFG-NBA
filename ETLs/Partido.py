@@ -2,7 +2,7 @@ import pyspark
 from pyspark.sql import SparkSession
 from pyspark.sql import functions, Window
 
-from pyspark.sql.functions import concat_ws, col, row_number, split, when, lit, coalesce, to_timestamp, dayofmonth, month, year, lower, explode, array, sum, round
+from pyspark.sql.functions import concat_ws, col, row_number, split, when, lit, coalesce, to_timestamp, dayofmonth, month, year, lower, explode, array, sum, round, trim
 
 #mysql-connector-j-9.3.0.jar
 
@@ -53,6 +53,8 @@ df3 = df3.withColumn("nombre_equipo", concat_ws(" ", col("equipo_ciudad"), col("
 
 # Eliminamos datos innecesarios
 df1 = df1.drop("equipo_ciudad", "equipo_sobrenombre")
+df2 = df3.drop("equipo_ciudad", "equipo_sobrenombre")
+df3 = df3.drop("equipo_ciudad", "equipo_sobrenombre")
 
 # Unimos todos los datos en un dataset
 df_jugadores = df1.union(df2).union(df3)
@@ -60,17 +62,20 @@ df_jugadores = df1.union(df2).union(df3)
 # Eliminamos nombres de jugadores repretidos en el mismo partido
 df_jugadores = df_jugadores.dropDuplicates(["game_id", "jugador"])
 
+# Normalizamos los nombres de los jugadores
+df_jugadores = df_jugadores.withColumn("jugador", lower(trim(col("jugador"))))
+
 # Seleccionamos los datos requeridos del dataset de partidos
 df4 = aux0_df.select("game_id", "team_name_home", "team_name_away", "game_date", "season_type")
 
 # Eliminamos partidos duplicados
-df4 = df4.dropDuplicates("game_id")
+df4 = df4.dropDuplicates(["game_id"])
 
 # Seleccionar los datos de los arbitros
 df5 = aux1_df.select("game_id","first_name","last_name")
  
 # Generamos el nombre completo del arbitro
-df5 = df5.withcolumn("nombre_arbitro", concat_ws(" ", col("first_name"), col("last_name")))
+df5 = df5.withColumn("nombre_arbitro", concat_ws(" ", col("first_name"), col("last_name")))
 
 # Eliminamos datos innecesarios
 df5 = df5.drop("first_name","last_name")
@@ -80,7 +85,8 @@ df_partidos = df4.join(df5, on="game_id", how="left")
 
 # Obtenemos las tablas del almacen de datos
 arbitro_df = spark.table("mydb.arbitro").select("idArbitro", "nombre")
-liga_df = spark.table("mydb.liga").select("idLiga", "nombre_mal")
+liga_df = spark.table("mydb.liga").select("idLiga", "nombre")\
+       .withColumnRenamed("nombre", "nombre_mal") 
 fecha_df = spark.table("mydb.fecha").select("idFecha", "dia", "mes", "ano")
 equipo_df = spark.table("mydb.equipo").select("idEquipo", "nombre", "arena", "ciudad", "estado")
 ubicacion_df = spark.table("mydb.ubicacion").select("idUbicacion", "arena", "ciudad", "estado")
@@ -92,7 +98,7 @@ df_partidos = df_partidos.join(
     arbitro_df,
     df_partidos.nombre_arbitro == arbitro_df.nombre,
     how="left"
-).drop(df_partidos.nombre, df_partidos.nombre_arbitro) 
+).drop(arbitro_df.nombre, "nombre_arbitro") 
 
 
 #Parte Liga #
@@ -106,7 +112,7 @@ df_partidos = df_partidos.join(
     liga_df,
     df_partidos.season_type == liga_df.nombre,
     how="left"
-).drop(df_partidos.nombre, df_partidos.nombre_arbitro, df_partidos.nombre_mal) 
+).drop(liga_df.nombre, "nombre_arbitro", liga_df.nombre_mal) 
 
 # Parte Fecha #
 # Generamos el dia, mes y ano de cada fecha
@@ -124,19 +130,21 @@ df_partidos = df_partidos.join(
         df_partidos.ano == fecha_df.ano
     ],
     how="left"
-).drop(fecha_df.dia, fecha_df.mes, fecha_df.ano, df_partidos.game_date, df_partidos.dia, df_partidos.mes, df_partidos.ano) 
+).drop(fecha_df.dia, fecha_df.mes, fecha_df.ano, "game_date", "dia", "mes", "ano") 
 
 # Parte Equipo Visitante #
+equipo_visitante_df = equipo_df.alias("visitante")
 df_partidos = df_partidos.join(
-    equipo_df,
+    equipo_visitante_df,
     df_partidos.team_name_away == equipo_df.nombre,
     how="left"
-).drop(equipo_df.nombre, equipo_df.arena, equipo_df.ciudad, equipo_df.estado, df_partidos.team_name_away) \
+).drop(equipo_df.nombre, equipo_df.arena, equipo_df.ciudad, equipo_df.estado, "team_name_away") \
 .withColumnRenamed("idEquipo", "idEquipo_Visitante")  
 
 # Parte Equipo Local #
+equipo_local_df = equipo_df.alias("local")
 df_partidos = df_partidos.join(
-    equipo_df,
+    equipo_local_df,
     df_partidos.team_name_home == equipo_df.nombre,
     how="left"
 ).drop(equipo_df.nombre, "team_name_home") \
@@ -144,14 +152,14 @@ df_partidos = df_partidos.join(
 
 # Parte Ubicacion #
 df_partidos = df_partidos.join(
-    equipo_df,
+    ubicacion_df,
     on=[
         df_partidos.arena == ubicacion_df.arena,
         df_partidos.ciudad == ubicacion_df.ciudad,
         df_partidos.estado == ubicacion_df.estado
     ],
     how="left"
-).drop(df_partidos.arena, df_partidos.ciudad, df_partidos.estado, ubicacion_df.arena, ubicacion_df.ciudad, ubicacion_df.estado)
+).drop("arena", "ciudad", "estado", ubicacion_df.arena, ubicacion_df.ciudad, ubicacion_df.estado)
 
 # Parte Jugador #
 # Unimos los datos de los jugadores con los del partido
@@ -182,7 +190,12 @@ df_jugadas = df6.union(df7)
 df_jugadas = df_jugadas.withColumn("descripcion", lower(col("descripcion")))
 
 # Eliminamos jugadas vacias
-df_jugadas = df_jugadas.dropna("descripcion")
+df_jugadas = df_jugadas.dropna(subset=["descripcion"])
+
+# Normalizamos los nombres de los jugadores
+df_jugadas = df_jugadas.withColumn("player1_name", lower(trim(col("player1_name")))) \
+    .withColumn("player2_name", lower(trim(col("player2_name")))) \
+    .withColumn("player3_name", lower(trim(col("player3_name"))))
 
 # Caso especifico del saque #
 # Obtenemos los saques existentes en las jugadas
@@ -193,31 +206,35 @@ saque_jugador1 = descripcion_saques.select(
     col("game_id"),
     col("player1_name").alias("jugador"),
     lit(1).alias("Saques_Exitosos"),
-    lit(1).alias("Cantidad_Ataques_Exitosos"),
+    lit(1).alias("cantidad_ataques_exitosos"),
     lit(0).alias("Saques_Fallidos"),
-    lit(0).alias("Cantidad_Ataques_Fallidos"),
+    lit(0).alias("cantidad_ataques_fallidos"),
 )
 
 saque_jugador2 = descripcion_saques.select(
     col("game_id"),
     col("player2_name").alias("jugador"),
     lit(0).alias("Saques_Exitosos"),
-    lit(0).alias("Cantidad_Ataques_Exitosos"),
+    lit(0).alias("cantidad_ataques_exitosos"),
     lit(1).alias("Saques_Fallidos"),
-    lit(1).alias("Cantidad_Ataques_Fallidos"),
+    lit(1).alias("cantidad_ataques_fallidos"),
 )
 
 saque_jugador3 = descripcion_saques.select(
     col("game_id"),
     col("player3_name").alias("jugador"),
     lit(1).alias("Saques_Exitosos"),
-    lit(1).alias("Cantidad_Ataques_Exitosos"),
+    lit(1).alias("cantidad_ataques_exitosos"),
     lit(0).alias("Saques_Fallidos"),
-    lit(0).alias("Cantidad_Ataques_Fallidos"),
+    lit(0).alias("cantidad_ataques_fallidos"),
 )
 
 # Unimos las 3 tablas para tener los saques totales
 saques_df = saque_jugador1.unionByName(saque_jugador2).unionByName(saque_jugador3)
+
+# Obtenemos las ids de los jugadores
+saques_df = saques_df.join(jugador_df, saques_df.jugador == jugador_df.nombre, "left") \
+                         .drop("nombre", "jugador") 
 
 # Caso especifico del bloqueo #
 # Filtramos jugadas con bloqueos
@@ -230,6 +247,10 @@ bloqueos_df = descripcion_bloqueo.select(
     lit(1).alias("Tiros_Bloqueados")
 )
 
+# Obtenemos las ids de los jugadores
+bloqueos_df = bloqueos_df.join(jugador_df, bloqueos_df.jugador == jugador_df.nombre, "left") \
+                         .drop("nombre", "jugador") 
+
 # Caso especifico del robo #
 # Filtramos jugadas con robos
 descripcion_robos = df_jugadas.filter(lower(col("descripcion")).contains("steal"))
@@ -241,11 +262,19 @@ robos_df = descripcion_robos.select(
     lit(1).alias("Robos_Exitosos")
 )
 
+# Obtenemos las ids de los jugadores
+robos_df = robos_df.join(jugador_df, robos_df.jugador == jugador_df.nombre, "left") \
+                         .drop("nombre", "jugador") 
+
 # Caso general #
 # Aplanamos los datos de las jugadas para cada jugador
 df_jugadas = df_jugadas.withColumn("jugador", explode(array("player1_name", "player2_name", "player3_name"))) \
                       .filter(col("jugador").isNotNull()) \
                       .select("game_id", "descripcion", "jugador")
+
+# Obtenemos las ids de los jugadores
+df_jugadas = df_jugadas.join(jugador_df, df_jugadas.jugador == jugador_df.nombre, "left") \
+                         .drop("nombre", "jugador") 
 
 # Generacion de estadisticas generales(solo realizadas por un jugador) por cada jugada segun sus datos
 df_jugadas = df_jugadas \
@@ -298,6 +327,8 @@ df_jugadas = df_jugadas \
 # Agrupamos los datos #
 # Agrupamos datos generales
 df_estadisticas_finales = df_jugadas.groupBy("game_id", "idJugador").agg(
+    sum("tiro_doble_exitoso").alias("Tiros_Dobles_Exitosos"),
+    sum("tiro_doble_fallido").alias("Tiros_Dobles_Fallidos"),
     sum("tiro_triple_exitoso").alias("Tiros_Triples_Exitosos"),
     sum("tiro_triple_fallido").alias("Tiros_Triples_Fallidos"),
     sum("tiro_libre_exitoso").alias("Tiros_Libres_Exitosos"),
@@ -314,18 +345,18 @@ df_estadisticas_finales = df_jugadas.groupBy("game_id", "idJugador").agg(
     sum("faltas_rebote").alias("Faltas_Rebote"),
     sum("faltas_ofensivas").alias("Faltas_Ofensivas"),
     sum("jugada_total").alias("Numero_Jugadas_Totales"),
-    sum("cantidad_ataques_fallidos").alias("Cantidad_Ataques_Fallidos")
+    sum("cantidad_ataques_fallidos").alias("Cantidad_Ataques_Fallidos_General")
 )
 
 # Agrupamos los datos de saques/bloqueos/robos
 saques_df = saques_df.groupBy("game_id", "idJugador").agg(
     sum("Saques_Exitosos").alias("Saques_Exitosos"),
-    sum("Cantidad_Ataques_Exitosos").alias("Cantidad_Ataques_Exitosos"),
+    sum("cantidad_ataques_exitosos").alias("cantidad_ataques_exitosos"),
     sum("Saques_Fallidos").alias("Saques_Fallidos"),
-    sum("Cantidad_Ataques_Fallidos").alias("Cantidad_Ataques_Fallidos"),
+    sum("cantidad_ataques_fallidos").alias("cantidad_ataques_fallidos"),
 )
-bloqueos_df = bloqueos_df.groupBy("game_id", "jugador").agg(sum("Tiros_Bloqueados").alias("Tiros_Bloqueados"))
-robos_df = robos_df.groupBy("game_id", "jugador").agg(sum("Robos_Exitosos").alias("Robos_Exitosos"))
+bloqueos_df = bloqueos_df.groupBy("game_id", "idJugador").agg(sum("Tiros_Bloqueados").alias("Tiros_Bloqueados"))
+robos_df = robos_df.groupBy("game_id", "idJugador").agg(sum("Robos_Exitosos").alias("Robos_Exitosos"))
 
 # Juntar los datos de saques y generales #
 # Realizamos un join entre la tabla general y las especificas
@@ -350,13 +381,13 @@ df_final = df_final.join(
 # Sumamos los valores de la columna de ataques fallidos
 df_final = df_final.withColumn(
     "Cantidad_Ataques_Fallidos",
-    coalesce(col("Cantidad_Ataques_Fallidos"), lit(0)) + coalesce(col("saques_df.Cantidad_Ataques_Fallidos"), lit(0))
-).drop("saques_df.Cantidad_Ataques_Fallidos")
+    coalesce(col("Cantidad_Ataques_Fallidos_General"), lit(0)) + coalesce(col("cantidad_ataques_fallidos"), lit(0))
+)
 
 # Calculo de ataques exitosos #
 df_final = df_final.withColumn(
     "Cantidad_Ataques_Exitosos",
-    col("Tiros_Triples_Exitosos") + col("Tiros_Dobles_Exitosos") + col("Tiros_Libres_Exitosos")
+    col("Tiros_Triples_Exitosos") + col("Tiros_Dobles_Exitosos") + col("Tiros_Libres_Exitosos") + col("cantidad_ataques_exitosos")
 )
 
 # Calculo probabilidades y puntos #
@@ -370,10 +401,10 @@ df_final = df_final \
 )
 
 # Union de las estadisticas y las claves #
-# Unimos los datasets por el nombre del jugador y la game_id
+# Unimos los datasets por la id del jugador y la game_id
 df_partido_completo = df_final.join(
     df_partidos,
-    on=["game_id", "jugador"],
+    on=["game_id", "IdJugador"],
     how="inner"
 )
 
@@ -405,9 +436,8 @@ df_partido_completo = df_partido_completo.select(
     "Tiros_Triples_Exitosos",
     "Tiros_Triples_Fallidos",
     "Tiros_Libres_Exitosos",
-    "Tiros_LIbres_Fallidos",
+    "Tiros_Libres_Fallidos",
     "Robos_Exitosos",
-    "Robos_Fallidos",
     "Rebotes_Defensivos_Obtenidos",
     "Rebotes_Ofensivos_Obtenidos",
     "Rebotes_Obtenidos",
@@ -439,7 +469,6 @@ df_partido_completo = df_partido_completo.fillna(0, subset=
         "Tiros_Libres_Exitosos",
         "Tiros_LIbres_Fallidos",
         "Robos_Exitosos",
-        "Robos_Fallidos",
         "Rebotes_Defensivos_Obtenidos",
         "Rebotes_Ofensivos_Obtenidos",
         "Rebotes_Obtenidos",
@@ -463,6 +492,4 @@ df_partido_completo.show()
 
 # Almacenamos el resultado en Hive #
 df_partido_completo.write.mode("overwrite").saveAsTable("mydb.partido")
-
-
 

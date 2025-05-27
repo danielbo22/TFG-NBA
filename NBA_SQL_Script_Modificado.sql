@@ -10,25 +10,19 @@ CREATE TABLE IF NOT EXISTS Equipo (
   arena STRING,
   ciudad STRING,
   estado STRING
-)
-STORED AS PARQUET
-LOCATION 'hdfs://localhost:9000/opt/hive/apache-hive-3.1.3-bin/warehouse/mydb.db/equipo';
+)STORED AS PARQUET;
 
 -- Tabla Arbitro
 CREATE TABLE IF NOT EXISTS Arbitro (
   idArbitro BIGINT,
   nombre STRING
-)
-STORED AS PARQUET
-LOCATION 'hdfs://localhost:9000/opt/hive/apache-hive-3.1.3-bin/warehouse/mydb.db/arbitro';
+)STORED AS PARQUET;
 
 -- Tabla Liga
 CREATE TABLE IF NOT EXISTS Liga (
   idLiga BIGINT,
   nombre STRING
-)
-STORED AS PARQUET
-LOCATION 'hdfs://localhost:9000/opt/hive/apache-hive-3.1.3-bin/warehouse/mydb.db/liga';
+)STORED AS PARQUET;
 
 -- Tabla Fecha
 CREATE TABLE IF NOT EXISTS Fecha (
@@ -37,9 +31,7 @@ CREATE TABLE IF NOT EXISTS Fecha (
   dia INT,
   mes INT,
   ano INT
-)
-STORED AS PARQUET
-LOCATION 'hdfs://localhost:9000/opt/hive/apache-hive-3.1.3-bin/warehouse/mydb.db/fecha';
+)STORED AS PARQUET;
 
 -- Tabla Ubicacion
 CREATE TABLE IF NOT EXISTS Ubicacion (
@@ -48,9 +40,7 @@ CREATE TABLE IF NOT EXISTS Ubicacion (
   arena STRING,
   ciudad STRING,
   estado STRING
-)
-STORED AS PARQUET
-LOCATION 'hdfs://localhost:9000/opt/hive/apache-hive-3.1.3-bin/warehouse/mydb.db/ubicacion';
+)STORED AS PARQUET;
 
 -- Tabla Jugador
 CREATE TABLE IF NOT EXISTS Jugador (
@@ -66,9 +56,7 @@ CREATE TABLE IF NOT EXISTS Jugador (
   equipo STRING,
   estado_actual INT,
   carrera_profesional STRING
-)
-STORED AS PARQUET
-LOCATION 'hdfs://localhost:9000/opt/hive/apache-hive-3.1.3-bin/warehouse/mydb.db/jugador';
+)STORED AS PARQUET;
 
 -- Tabla Partido
 CREATE TABLE IF NOT EXISTS Partido (
@@ -88,9 +76,8 @@ CREATE TABLE IF NOT EXISTS Partido (
   Tiros_Triples_Exitosos INT,
   Tiros_Triples_Fallidos INT,
   Tiros_Libres_Exitosos INT,
-  Tiros_LIbres_Fallidos INT,
+  Tiros_Libres_Fallidos INT,
   Robos_Exitosos INT,
-  Robos_Fallidos INT,
   Rebotes_Defensivos_Obtenidos INT,
   Rebotes_Ofensivos_Obtenidos INT,
   Rebotes_Obtenidos INT,
@@ -107,6 +94,4 @@ CREATE TABLE IF NOT EXISTS Partido (
   Cantidad_Ataques_Exitosos INT,
   Cantidad_Ataques_Fallidos INT,
   Proporcion_Exito_Ataques FLOAT
-)
-STORED AS PARQUET
-LOCATION 'hdfs://localhost:9000/opt/hive/apache-hive-3.1.3-bin/warehouse/mydb.db/partido';
+)STORED AS PARQUET;
