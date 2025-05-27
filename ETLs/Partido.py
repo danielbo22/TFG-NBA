@@ -184,7 +184,7 @@ df_jugadas = df_jugadas.withColumn("descripcion", lower(col("descripcion")))
 # Eliminamos jugadas vacias
 df_jugadas = df_jugadas.dropna("descripcion")
 
-# Caso especifico del saque
+# Caso especifico del saque #
 # Obtenemos los saques existentes en las jugadas
 descripcion_saques = df_jugadas.filter(lower(col("descripcion")).contains("jump ball"))
 
@@ -219,14 +219,46 @@ saque_jugador3 = descripcion_saques.select(
 # Unimos las 3 tablas para tener los saques totales
 saques_df = saque_jugador1.unionByName(saque_jugador2).unionByName(saque_jugador3)
 
+# Caso especifico del bloqueo #
+# Filtramos jugadas con bloqueos
+descripcion_bloqueo = df_jugadas.filter(lower(col("descripcion")).contains("block"))
+
+# Jugador 3 es quien realiza el bloqueo
+bloqueos_df = descripcion_bloqueo.select(
+    col("game_id"),
+    col("player3_name").alias("jugador"),
+    lit(1).alias("Tiros_Bloqueados")
+)
+
+# Caso especifico del robo #
+# Filtramos jugadas con robos
+descripcion_robos = df_jugadas.filter(lower(col("descripcion")).contains("steal"))
+
+# Jugador 2 es quien realiza el robo
+robos_df = descripcion_robos.select(
+    col("game_id"),
+    col("player2_name").alias("jugador"),
+    lit(1).alias("Robos_Exitosos")
+)
+
+# Caso general #
 # Aplanamos los datos de las jugadas para cada jugador
 df_jugadas = df_jugadas.withColumn("jugador", explode(array("player1_name", "player2_name", "player3_name"))) \
                       .filter(col("jugador").isNotNull()) \
                       .select("game_id", "descripcion", "jugador")
 
-# Hacer estadisticas del tiro_doble cuando sepas los datos
 # Generacion de estadisticas generales(solo realizadas por un jugador) por cada jugada segun sus datos
 df_jugadas = df_jugadas \
+    .withColumn("tiro_doble_exitoso", when(
+        (lower(col("descripcion")).rlike("layup|dunk|shot|roll")) &
+        (~lower(col("descripcion")).contains("3pt")) &
+        (~lower(col("descripcion")).contains("turnover")) &
+        (~lower(col("descripcion")).contains("miss")), 1).otherwise(0)) \
+    .withColumn("tiro_doble_fallido", when(
+        (lower(col("descripcion")).rlike("layup|dunk|shot|roll")) &
+        (~lower(col("descripcion")).contains("3pt")) &
+        (~lower(col("descripcion")).contains("turnover")) &
+        (lower(col("descripcion")).contains("miss")), 1).otherwise(0)) \
     .withColumn("tiro_triple_exitoso", when(
         col("descripcion").contains("3pt") & ~col("descripcion").contains("miss"), 1).otherwise(0)) \
     .withColumn("tiro_triple_fallido", when(
@@ -235,10 +267,6 @@ df_jugadas = df_jugadas \
         col("descripcion").contains("free throw") & ~col("descripcion").contains("miss"), 1).otherwise(0)) \
     .withColumn("tiro_libre_fallido", when(
         col("descripcion").contains("free throw") & col("descripcion").contains("miss"), 1).otherwise(0)) \
-    .withColumn("robos_exitosos", when(
-        col("descripcion").contains("steal"), 1).otherwise(0)) \
-    .withColumn("tiros_bloqueados", when(
-        col("descripcion").contains("block"), 1).otherwise(0)) \
     .withColumn("rebotes_obtenidos", when(
         col("descripcion").contains("rebound"), 1).otherwise(0)) \
     .withColumn("rebotes_defensivos_obtenidos", when(
@@ -274,8 +302,6 @@ df_estadisticas_finales = df_jugadas.groupBy("game_id", "idJugador").agg(
     sum("tiro_triple_fallido").alias("Tiros_Triples_Fallidos"),
     sum("tiro_libre_exitoso").alias("Tiros_Libres_Exitosos"),
     sum("tiro_libre_fallido").alias("Tiros_Libres_Fallidos"),
-    sum("robos_exitosos").alias("Robos_Exitosos"),
-    sum("tiros_bloqueados").alias("Tiros_Bloqueados"),
     sum("rebotes_obtenidos").alias("Rebotes_Obtenidos"),
     sum("rebotes_defensivos_obtenidos").alias("Rebotes_Defensivos_Obtenidos"),
     sum("rebotes_ofensivos_obtenidos").alias("Rebotes_Ofensivos_Obtenidos"),
@@ -291,18 +317,32 @@ df_estadisticas_finales = df_jugadas.groupBy("game_id", "idJugador").agg(
     sum("cantidad_ataques_fallidos").alias("Cantidad_Ataques_Fallidos")
 )
 
-# Agrupamos los datos de saques
+# Agrupamos los datos de saques/bloqueos/robos
 saques_df = saques_df.groupBy("game_id", "idJugador").agg(
     sum("Saques_Exitosos").alias("Saques_Exitosos"),
     sum("Cantidad_Ataques_Exitosos").alias("Cantidad_Ataques_Exitosos"),
     sum("Saques_Fallidos").alias("Saques_Fallidos"),
     sum("Cantidad_Ataques_Fallidos").alias("Cantidad_Ataques_Fallidos"),
 )
+bloqueos_df = bloqueos_df.groupBy("game_id", "jugador").agg(sum("Tiros_Bloqueados").alias("Tiros_Bloqueados"))
+robos_df = robos_df.groupBy("game_id", "jugador").agg(sum("Robos_Exitosos").alias("Robos_Exitosos"))
 
 # Juntar los datos de saques y generales #
-# Realizamos un koin entre las 2 tablas
+# Realizamos un join entre la tabla general y las especificas
 df_final = df_estadisticas_finales.join(
     saques_df,
+    on=["game_id", "idJugador"],
+    how="outer"
+)
+
+df_final = df_final.join(
+    bloqueos_df,
+    on=["game_id", "idJugador"],
+    how="outer"
+)
+
+df_final = df_final.join(
+    robos_df,
     on=["game_id", "idJugador"],
     how="outer"
 )
@@ -385,6 +425,38 @@ df_partido_completo = df_partido_completo.select(
     "Cantidad_Ataques_Fallidos",
     "Proporcion_Exito_Ataques"
 )
+
+# Rellenar estadisticas vacias con 0
+df_partido_completo = df_partido_completo.fillna(0, subset=
+    [
+        "Puntos_Totales",
+        "Saques_Exitosos",
+        "Saques_Fallidos",
+        "Tiros_Dobles_Exitosos",
+        "Tiros_Dobles_Fallidos",
+        "Tiros_Triples_Exitosos",
+        "Tiros_Triples_Fallidos",
+        "Tiros_Libres_Exitosos",
+        "Tiros_LIbres_Fallidos",
+        "Robos_Exitosos",
+        "Robos_Fallidos",
+        "Rebotes_Defensivos_Obtenidos",
+        "Rebotes_Ofensivos_Obtenidos",
+        "Rebotes_Obtenidos",
+        "Tiros_Bloqueados",
+        "Perdidas_Balon",
+        "Cambios_Jugadores",
+        "Tiempos_Muertos",
+        "Faltas_Personales",
+        "Faltas_Balon_Suelto",
+        "Faltas_Disparo",
+        "Faltas_Rebote",
+        "Faltas_Ofensivas",
+        "Numero_Jugadas_Totales",
+        "Cantidad_Ataques_Exitosos",
+        "Cantidad_Ataques_Fallidos",
+        "Proporcion_Exito_Ataques"
+    ])
 
 # Mostramos la tabla final #
 df_partido_completo.show()
