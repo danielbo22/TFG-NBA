@@ -2,7 +2,7 @@ import pyspark
 from pyspark.sql import SparkSession
 from pyspark.sql import functions, Window
 
-from pyspark.sql.functions import concat_ws, col, row_number, split, when, lit, coalesce, to_timestamp, dayofmonth, month, year, lower, explode, array, sum, round, trim
+from pyspark.sql.functions import concat_ws, col, row_number, split, when, lit, coalesce, to_timestamp, dayofmonth, month, year, lower, explode, array, sum, round, trim, length
 
 #mysql-connector-j-9.3.0.jar
 
@@ -53,7 +53,7 @@ df3 = df3.withColumn("nombre_equipo", concat_ws(" ", col("equipo_ciudad"), col("
 
 # Eliminamos datos innecesarios
 df1 = df1.drop("equipo_ciudad", "equipo_sobrenombre")
-df2 = df3.drop("equipo_ciudad", "equipo_sobrenombre")
+df2 = df2.drop("equipo_ciudad", "equipo_sobrenombre")
 df3 = df3.drop("equipo_ciudad", "equipo_sobrenombre")
 
 # Unimos todos los datos en un dataset
@@ -91,6 +91,9 @@ fecha_df = spark.table("mydb.fecha").select("idFecha", "dia", "mes", "ano")
 equipo_df = spark.table("mydb.equipo").select("idEquipo", "nombre", "arena", "ciudad", "estado")
 ubicacion_df = spark.table("mydb.ubicacion").select("idUbicacion", "arena", "ciudad", "estado")
 jugador_df = spark.table("mydb.jugador").select("idJugador", "nombre")
+
+# Normalizamos los nombres de los jugadores
+jugador_df = jugador_df.withColumn("nombre", lower(trim(col("nombre"))))
 
 # Parte Arbitro #
 # Obtenemos la id del arbitro
@@ -136,7 +139,7 @@ df_partidos = df_partidos.join(
 equipo_visitante_df = equipo_df.alias("visitante")
 df_partidos = df_partidos.join(
     equipo_visitante_df,
-    df_partidos.team_name_away == equipo_df.nombre,
+    df_partidos.team_name_away == equipo_visitante_df.nombre,
     how="left"
 ).drop(equipo_df.nombre, equipo_df.arena, equipo_df.ciudad, equipo_df.estado, "team_name_away") \
 .withColumnRenamed("idEquipo", "idEquipo_Visitante")  
@@ -145,7 +148,7 @@ df_partidos = df_partidos.join(
 equipo_local_df = equipo_df.alias("local")
 df_partidos = df_partidos.join(
     equipo_local_df,
-    df_partidos.team_name_home == equipo_df.nombre,
+    df_partidos.team_name_home == equipo_local_df.nombre,
     how="left"
 ).drop(equipo_df.nombre, "team_name_home") \
 .withColumnRenamed("idEquipo", "idEquipo_Local") 
@@ -268,9 +271,18 @@ robos_df = robos_df.join(jugador_df, robos_df.jugador == jugador_df.nombre, "lef
 
 # Caso general #
 # Aplanamos los datos de las jugadas para cada jugador
-df_jugadas = df_jugadas.withColumn("jugador", explode(array("player1_name", "player2_name", "player3_name"))) \
-                      .filter(col("jugador").isNotNull()) \
-                      .select("game_id", "descripcion", "jugador")
+df_jugadas = df_jugadas.withColumn(
+    "jugador",
+    explode(
+        array(
+            coalesce(col("player1_name"), lit("")),
+            coalesce(col("player2_name"), lit("")),
+            coalesce(col("player3_name"), lit(""))
+        )
+    )
+).filter(col("jugador") != "") \
+.select("game_id", "descripcion", "jugador")
+
 
 # Obtenemos las ids de los jugadores
 df_jugadas = df_jugadas.join(jugador_df, df_jugadas.jugador == jugador_df.nombre, "left") \
@@ -322,7 +334,7 @@ df_jugadas = df_jugadas \
     .withColumn("cantidad_ataques_fallidos", when(
         col("descripcion").contains("miss"), 1).otherwise(0)) \
     .withColumn("jugada_total", when(
-        col("descripcion").isNotNull(), 1).otherwise(0))
+        col("descripcion").isNotNull() & (length(trim(col("descripcion"))) > 0), 1).otherwise(0))
 
 # Agrupamos los datos #
 # Agrupamos datos generales
@@ -378,6 +390,12 @@ df_final = df_final.join(
     how="outer"
 )
 
+# Reemplazo de posibles nulos antes de calculos
+df_final = df_final.fillna(0, subset=[
+    "Tiros_Triples_Exitosos", "Tiros_Dobles_Exitosos", "Tiros_Libres_Exitosos",
+    "cantidad_ataques_exitosos", "Numero_Jugadas_Totales", "Cantidad_Ataques_Fallidos_General", "cantidad_ataques_fallidos"
+])
+
 # Sumamos los valores de la columna de ataques fallidos
 df_final = df_final.withColumn(
     "Cantidad_Ataques_Fallidos",
@@ -394,7 +412,9 @@ df_final = df_final.withColumn(
 df_final = df_final \
 .withColumn(
     "Proporcion_Exito_Ataques",
-    round(col("Cantidad_Ataques_Exitosos") / col("Numero_Jugadas_Totales"), 3)
+    when(col("Numero_Jugadas_Totales") > 0,
+     round(col("Cantidad_Ataques_Exitosos") / col("Numero_Jugadas_Totales"), 3)
+    ).otherwise(lit(0.0))
 ).withColumn(
     "Puntos_Totales",
     col("Tiros_Triples_Exitosos")*3 + col("Tiros_Dobles_Exitosos")*2 + col("Tiros_Libres_Exitosos")
@@ -467,7 +487,7 @@ df_partido_completo = df_partido_completo.fillna(0, subset=
         "Tiros_Triples_Exitosos",
         "Tiros_Triples_Fallidos",
         "Tiros_Libres_Exitosos",
-        "Tiros_LIbres_Fallidos",
+        "Tiros_Libres_Fallidos",
         "Robos_Exitosos",
         "Rebotes_Defensivos_Obtenidos",
         "Rebotes_Ofensivos_Obtenidos",
