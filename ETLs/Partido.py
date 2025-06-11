@@ -507,6 +507,9 @@ df_partido_completo = df_partido_completo.fillna(0, subset=
         "Proporcion_Exito_Ataques"
     ])
 
+# Eliminamos valores repetidos
+df_partido_completo = df_partido_completo.dropDuplicates(["idPartido", "idJugador"])
+
 # Mostramos la tabla final #
 df_partido_completo.show()
 
