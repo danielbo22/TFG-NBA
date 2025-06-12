@@ -6,3 +6,363 @@ En este repositorio se almacenará todos los ficheros de programación necesario
   -Archivos de modificación de datos (ETL)
   -Archivos de generación de estrucutra de la base de datos
   -Archivos necesarios para instalación de herramientas del proyecto
+
+Todos los datos usados provienen del siguiente dDataset publicado en Kaggle: https://www.kaggle.com/datasets/wyattowalsh/basketball 
+
+El análisis de los datos usados dentro del proyecto son los siguientes:
+->common_player_info:
+| Nombre                                | Descripción                                                                  | Tipo de dato | Ejemplo                |
+|---------------------------------------|------------------------------------------------------------------------------|--------------|------------------------|
+| person_id                             | Número identificativo del jugador                                            | INT          | 76001                  |
+| first_name                            | Nombre del jugador                                                           | String       | Zaid                   |
+| last_name                             | Apellido del jugador                                                         | String       | Able                   |
+| Display_first_last                    | Nombre y apellido del jugador                                                | String       | Ala abdelnaby          |
+| Display_last_first                    | Apellido y nombre del jugador                                                | String       | Able, forest           |
+| Display_fi_last                       | Primera letra del nombre y el apellido del jugador                           | String       | J. Abramovic           |
+| Player_slug                           | Nombres y apellidos sin espacios, solo con guiones                           | String       | Forest-able            |
+| birthdate                             | Marca la fecha de nacimiento del jugador                                     | Date         | 12/08/1946 00:00:00    |
+| School                                | Marca la escuela de baloncesto de la que proviene el jugador                 | String       | Duke                   |
+| country                               | Marca el país del que proviene el jugador                                    | String       | USA                    |
+| Last_affiliation                      | Marca la última afiliación conocida del jugador antes de entrar en la NBA    | String       | UCLA/USA               |
+| height                                | Marca la altura del jugador en pies                                          | String       | 6-10                   |
+| weight                                | Marca el peso del jugador en onzas                                           | INT          | 240                    |
+| Season_exp                            | Marca la cantidad de temporadas jugadas por el jugador                       | INT          | 5                      |
+| jersey                                | Número específico del jersey del jugador                                     | INT          | 30                     |
+| position                              | Posición dentro del partido donde se encuentra el jugador                    | String       | Forward                |
+| rosterstatus                          | Marca si el jugador está o no activo                                         | String       | Inactive               |
+| Games_played_current_season_flag      | Partidos donde el jugador ha participado en esta temporada                   | String       | N                      |
+| Team_id                               | Marca la id del equipo del jugador                                           | INT          | 1610612757             |
+| Team_name                             | Marca el nombre del equipo del jugador                                       | String       | Rockets                |
+| Team_abbreviation                     | Abreviación del nombre del equipo                                            | String       | POR                    |
+| Team_code                             | Sobrenombre del equipo                                                       | String       | lakers                 |
+| Team_city                             | Ciudad del equipo                                                            | String       | Portland               |
+| Player_code                           | Código generado con el nombre del jugador y que lo representa                | String       | shareef_abdur-rahim    |
+| From_year                             | Año inicial dentro de la NBA del jugador                                     | INT          | 1990                   |
+| To_year                               | Año final dentro de la NBA del jugador                                       | INT          | 1994                   |
+| Dleague_flag                          | Marca si el jugador ha participado en temporada de ligas menores             | Boolean      | N                      |
+| Nba_flag                              | Marca si un jugador pertenece a la propia NBA o no                           | Boolean      | Y                      |
+| Games_played_flag                     | Marca si el jugador ha participado en algún partido                          | Boolean      | Y                      |
+| Draft_year                            | Año donde el jugador fue seleccionado en el evento de draft de la NBA        | INT          | 1990                   |
+| Draft_round                           | Ronda en la que el jugador fue seleccionado dentro del draft                 | String       | undrafted              |
+| Draft_number                          | Número del draft en el que fue seleccionado el jugador                       | String       | 25                     |
+| Greatest_75_flag                      | Si el jugador ha estado dentro de la lista de la NBA de los 75 mejores       | Boolean      | Y                      |
+
+->draft_combine_stats:
+| Nombre                             | Descripción                                                               | Tipo de dato | Ejemplo      |
+|------------------------------------|---------------------------------------------------------------------------|--------------|--------------|
+| Season                             | Temporada inicial donde el jugador comenzó en la NBA                      | Int          | 2000         |
+| Player_id                          | ID específica del jugador                                                 | Int          | 2124         |
+| First_name                         | Nombre del jugador                                                        | String       | Malik        |
+| Last_name                          | Apellido del jugador                                                      | String       | Allen        |
+| Player_name                        | Nombre completo del jugador                                               | String       | Mario Bland  |
+| position                           | Posición del jugador en los partidos                                      | String       | PF-C         |
+| Height_wo_shoes                    | Altura del jugador sin zapatos                                            | Float        | 80.25        |
+| Height_wo_shoes_ft_in              | Altura del jugador sin zapatos en pies                                    | String       | 6’ 8.25’’    |
+| Height_w_shoes                     | Altura del jugador con zapatos                                            | Float        | 76.25        |
+| Height_w_shoes_ft_in               | Altura del jugador con zapatos en pies                                    | String       | 6' 8.5''     |
+| weight                             | Peso del jugador en libras                                                | Int          | 198          |
+| wingspan                           | Envergadura del jugador                                                   | Float        | 86.5         |
+| Wingspan_ft_in                     | Envergadura del jugador en pies                                           | String       | 7' 2.5''     |
+| Standing_reach                     | Altura total con los brazos extendidos del jugador                        | Int          | 109          |
+| Standing_reach_ft_in               | Altura total con los brazos extendidos en pies                            | String       | 9' 1''       |
+| Body_fat_pct                       | Porcentaje de masa corporal                                               | Float        | 6.7          |
+| Hand_length                        | Largo de la mano del jugador                                              | Float        | 8.5          |
+| Hand_width                         | Ancho de la mano del jugador                                              | Float        | 9.5          |
+| Standing_vertical_leap             | Altura del salto vertical estático del jugador                            | Int          | 25.5         |
+| Max_vertical_leap                  | Altura del salto vertical con carrera                                     | Float        | 29.5         |
+| Lane_agility_time                  | Tiempo que tarda en moverse en un área en forma de H                      | Float        | 11.83        |
+| Modified_lane_agility_time         | Variación entre diferentes pruebas de velocidad                           | Float        | 2.22         |
+| Three_quarter_sprint               | Tiempo que tarda en recorrer ¾ de la cancha                               | Float        | 3.38         |
+| Bench_press                        | Repeticiones de 185 libras en press banca                                 | Int          | 19           |
+| Spot_fifteen_corner_left           | Tiros desde 15 pies en la esquina izquierda                               | String       | 3-5          |
+| Spot_fifteen_break_left            | Tiros desde 15 pies en el ala izquierda                                   | String       | 3-5          |
+| Spot_fifteen_top_key               | Tiros desde 15 pies en el centro de la cancha                             | String       | 4-5          |
+| Spot_fifteen_break_right           | Tiros desde 15 pies en la esquina derecha                                 | String       | 3-5          |
+| Spot_fifteen_corner_right          | Tiros desde 15 pies en el ala derecha                                     | String       | 5-5          |
+| Spot_college_corner_left           | Tiros desde rango escolar en la esquina izquierda                         | String       | 1-5          |
+| Spot_college_break_left            | Tiros desde rango escolar en el ala izquierda                             | String       | 2-5          |
+| Spot_college_top_key               | Tiros desde rango escolar en el centro de la cancha                       | String       | 5-5          |
+| Spot_college_break_right           | Tiros desde rango escolar en la esquina derecha                           | String       | 3-5          |
+| Spot_college_corner_right          | Tiros desde rango escolar en el ala derecha                               | String       | 2-5          |
+| Spot_nba_corner_left               | Tiros en la NBA desde la esquina izquierda                                | String       | 3-5          |
+| Spot_nba_break_left                | Tiros en la NBA desde el ala izquierda                                    | String       | 2-5          |
+| Spot_nba_top_key                   | Tiros en la NBA desde el centro de la cancha                              | String       | 5-5          |
+| Spot_nba_break_right               | Tiros en la NBA desde la esquina derecha                                  | String       | 1-5          |
+| Spot_nba_corner_right              | Tiros en la NBA desde el ala derecha                                      | String       | 2-5          |
+| Off_drib_fifteen_break_left        | Tiros tras bote desde 15 pies en el ala izquierda                         | String       | 3-6          |
+| Off_drib_fifteen_top_key           | Tiros tras bote desde 15 pies en el centro                                | String       | 3-4          |
+| Off_drib_fifteen_break_right       | Tiros tras bote desde 15 pies en el ala derecha                           | String       | 4-6          |
+| Off_drib_college _break_left       | Tiros tras bote en la escuela en el ala izquierda                         | String       | 15-30        |
+| Off_drib_college _top_key          | Tiros tras bote en la escuela en el centro                                | String       | 3-4          |
+| Off_drib_college_break_right       | Tiros tras bote en la escuela en el ala derecha                           | String       | 2-4          |
+| On_move_fifteen                    | Tiros en movimiento desde 15 pies                                         | String       | 23-34        |
+| On_move_college                    | Tiros en movimiento desde rango escolar                                   | String       | 12-25        |
+
+->draft_history:
+| Nombre                | Descripción                                                                 | Tipo de dato | Ejemplo        |
+|-----------------------|-----------------------------------------------------------------------------|--------------|----------------|
+| Person_id             | ID del jugador                                                              | Int          | 79299          |
+| Player_name           | Nombre completo del jugador                                                 | String       | Glen Dropo     |
+| Season                | Año de selección del jugador                                                | Int          | 1947           |
+| Round_number          | Número que representa en qué posición fue elegido el jugador                | Int          | 1              |
+| Round_pick            | Subronda en la que el jugador fue elegido                                   | Int          | 2              |
+| Overall_pick          | Posición total entre la ronda y subronda en la que fue elegido              | Int          | 3              |
+| Draft_type            | Forma de selección del jugador                                              | String       | Draft          |
+| Team_id               | ID del equipo                                                               | Int          | 1610610031     |
+| Team_city             | Ciudad del equipo                                                           | String       | Toronto        |
+| Team_name             | Sobrenombre del equipo                                                      | String       | Ironmen        |
+| Team_abbrevation      | Abreviación del nombre del equipo                                           | String       | PIT            |
+| organization          | Grupo del que proviene el jugador                                           | String       | Santa Clara    |
+| Organization_type     | Tipo de organización de la que proviene el jugador                          | String       | College/University |
+| Player_profile_flag   | Marca si el jugador tiene un perfil registrado para los datos               | Boolean      | 1              |
+
+->game:
+| Nombre                     | Descripción                                                             | Tipo de dato | Ejemplo              |
+|----------------------------|-------------------------------------------------------------------------|--------------|----------------------|
+| Season_id                  | ID de la temporada del partido                                          | Int          | 21946                |
+| Game_id                    | ID del partido                                                          | Int          | 0024600001           |
+| Game_date                  | Fecha donde se juega el partido                                         | Date         | 1946-11-01 00:00:00  |
+| Season_type                | Tipo de temporada                                                       | String       | Regular Season       |
+| Team_id_home               | ID del equipo local                                                     | Int          | 1910610035           |
+| Team_abbreviation_home     | Abreviación del nombre del equipo local                                 | String       | BOM                  |
+| Team_name_home             | Nombre completo del equipo local                                        | String       | Chicago Stags        |
+| Matchup_home               | Abreviación del partido desde el punto de vista local                   | String       | HUS vs. NYK          |
+| Wl_home                    | Resultado del equipo local (W/L)                                        | String       | L                    |
+| min                        | Duración en minutos del partido jugado                                  | Int          | 240                  |
+| Fgm_home                   | Tiros de campo anotados por el equipo local                             | Float        | 25.0                 |
+| Fga_home                   | Tiros de campo intentados por el equipo local                           | Float        | 59.0                 |
+| Fg_pct_home                | Porcentaje de tiros de campo del equipo local                           | Float        | 0.339                |
+| Fg3m_home                  | Triples anotados por el equipo local                                    | Float        | 4.20                 |
+| Fg3a_home                  | Triples intentados por el equipo local                                  | Float        | 7.70                 |
+| Fg3_pct_home               | Porcentaje de triples del equipo local                                  | Float        | 0.333                |
+| ftm_home                   | Tiros libres anotados por el equipo local                               | Float        | 16.0                 |
+| fta_home                   | Tiros libres intentados por el equipo local                             | Float        | 29.0                 |
+| Ft_pct_home                | Porcentaje de tiros libres del equipo local                             | Float        | 0.65                 |
+| oreb_home                  | Rebotes ofensivos del equipo local                                      | Float        | 11.0                 |
+| dreb_home                  | Rebotes defensivos del equipo local                                     | Float        | 30.0                 |
+| reb_home                   | Rebotes totales del equipo local                                        | Float        | 42.0                 |
+| ast_home                   | Asistencias del equipo local                                            | Float        | 24.0                 |
+| stl_home                   | Robos del equipo local                                                  | Float        | 8.0                  |
+| blk_home                   | Bloqueos del equipo local                                               | Float        | 4.0                  |
+| tov_home                   | Pérdidas del balón del equipo local                                     | Float        | 14.0                 |
+| pf_home                    | Faltas personales del equipo local                                      | Float        | 21.0                 |
+| pts_home                   | Puntos anotados del equipo local                                        | Float        | 66.0                 |
+| Plus_minus_home            | Diferencia de puntos del equipo local                                   | Int          | -2                   |
+| Video_available_home       | Indica si hay video disponible del equipo local                         | Boolean      | 0                    |
+| Team_id_away               | ID del equipo visitante                                                 | Int          | 1610612752           |
+| Team_abbreviation_away     | Abreviación del nombre del equipo visitante                             | String       | PIT                  |
+| Team_name_away             | Nombre completo del equipo visitante                                    | String       | Boston Celtics       |
+| Matchup_away               | Abreviación del partido desde el punto de vista visitante               | String       | NYK @ HUS            |
+| Wl_away                    | Resultado del equipo visitante (W/L)                                    | String       | W                    |
+| Fgm_away                   | Tiros de campo anotados por el equipo visitante                         | Float        | 16.0                 |
+| Fga_away                   | Tiros de campo intentados por el equipo visitante                       | Float        | 72.0                 |
+| Fg_pct_away                | Porcentaje de tiros de campo del equipo visitante                       | Float        | 0.222                |
+| Fg3m_away                  | Triples anotados por el equipo visitante                                | Float        | 2.00                 |
+| Fg3a_away                  | Triples intentados por el equipo visitante                              | Float        | 22.00                |
+| Fg3_pct_away               | Porcentaje de triples del equipo visitante                              | Float        | 0.333                |
+| ftm_away                   | Tiros libres anotados por el equipo visitante                           | Float        | 19.0                 |
+| fta_away                   | Tiros libres intentados por el equipo visitante                         | Float        | 26.0                 |
+| Ft_pct_away                | Porcentaje de tiros libres del equipo visitante                         | Float        | 0.769                |
+| oreb_away                  | Rebotes ofensivos del equipo visitante                                  | Float        | 10.0                 |
+| dreb_away                  | Rebotes defensivos del equipo visitante                                 | Float        | 30.0                 |
+| reb_away                   | Rebotes totales del equipo visitante                                    | Float        | 41.0                 |
+| ast_away                   | Asistencias del equipo visitante                                        | Float        | 22.0                 |
+| stl_away                   | Robos del equipo visitante                                              | Float        | 7.0                  |
+| blk_away                   | Bloqueos del equipo visitante                                           | Float        | 4.0                  |
+| tov_away                   | Pérdidas del balón del equipo visitante                                 | Float        | 14.0                 |
+| pf_away                    | Faltas personales del equipo visitante                                  | Float        | 25.0                 |
+| pts_away                   | Puntos anotados del equipo visitante                                    | Float        | 53.0                 |
+| Plus_minus_away            | Diferencia de puntos del equipo visitante                               | Int          | -6                   |
+| Video_available_away       | Indica si hay video disponible del equipo visitante                     | Boolean      | 0                    |
+
+->game_info:
+| Nombre     | Descripción                                        | Tipo de dato | Ejemplo            |
+|------------|----------------------------------------------------|--------------|--------------------|
+| Game_id    | ID específica del partido                          | Int          | 0026200121         |
+| Game_date  | Fecha del partido                                  | Date         | 1962-12-11 00:00:00|
+| Attendance | Cantidad de gente que ha asistido al partido       | Float        | 15237.0            |
+| Game_time  | Duración del partido                               | String       | 2:13               |
+
+->game_summary:
+| Nombre                               | Descripción                                                   | Tipo de dato | Ejemplo              |
+|--------------------------------------|---------------------------------------------------------------|--------------|----------------------|
+| Game_date_est                        | Fecha del partido en formato estadounidense                   | Date         | 1946-11-05 00:00:00  |
+| Game_sequence                        | Cantidad de partidos jugadas ese día                          | Float        | 1.0                  |
+| Game_id                              | Id del partido                                                | Int          | 0024600009           |
+| Game_status_id                       | Id que marca el estado del partido en este momento            | Int          | 3                    |
+| Game_status_next                     | Texto que marca el estado del partido en este momento         | String       | Final                |
+| Gamecode                             | Código específico del partido                                 | String       | 19461103/HUSCLR      |
+| Home_team_id                         | Id del equipo local                                           | Int          | 1610610026           |
+| Visitor_team_id                      | Id del equipo visitante                                       | Int          | 1610610035           |
+| Season                               | Temporada donde se lleva a cabo el partido                    | Int          | 1946                 |
+| Live_period                          | Periodo actual donde se juega el partido                      | Int          | 4                    |
+| Live_pc_time                         | Tiempo restante del periodo actual                            | String       | 00:19                |
+| Matl_tv_broadcaster_abbreviation     | Abreviatura que marca la cadena que transmite el partido      | String       | NBA TV               |
+| Live_period_time_bcast               | Marca el periodo actual                                       | String       | Q4 -                 |
+| Wh_status                            | Marca si se ha transmitido el partido                         | Boolean      | 1                    |
+
+->inactive_players:
+| Nombre              | Descripción                                   | Tipo de dato | Ejemplo       |
+|---------------------|-----------------------------------------------|--------------|---------------|
+| Game_id             | Id del partido                                | Int          | 0029600335    |
+| Player_id           | Id del jugador                                | Int          | 184           |
+| First_name          | Nombre del jugador                            | String       | Bobby         |
+| Last_name           | Apellido del jugador                          | String       | Perdue        |
+| Jersey_num          | Número del jersey del jugador                 | Int          | 14            |
+| Team_id             | Id del equipo                                 | Int          | 1610612739    |
+| Team_city           | Ciudad donde se sitúa el equipo               | String       | Claveland     |
+| Team_name           | Sobrenombre del equipo                        | String       | Cavaliers     |
+| Team_abbreviation   | Abreviación del nombre del equipo             | String       | CLE           |
+
+->line_score:
+| Nombre                   | Descripción                                                              | Tipo de dato     | Ejemplo             |
+|--------------------------|--------------------------------------------------------------------------|------------------|---------------------|
+| Game_date_est            | Fecha específica del partido jugado                                      | Date             | 1946-11-05 00:00:00 |
+| Game_sequence            | Cantidad de partidos jugadas ese día                                     | Float            | 1.0                 |
+| Game_id                  | Id del partido                                                           | Int              | 0024600001          |
+| Team_id_home             | Id del equipo local                                                      | Int              | 1610610035          |
+| Team_abbreviation_home   | Abreviación del nombre del equipo local                                  | String           | HUS                 |
+| Team_city_name_home      | Ciudad asociada al equipo local                                          | String           | Boston              |
+| Team_nickname_home       | Sobrenombre del equipo local                                             | String           | Bombers             |
+| Team_wins_losses_home    | Victorias y derrotas del equipo local                                    | String           | 0-1                 |
+| Pts_qtr1_home            | Puntos 1er cuarto equipo local                                           | Int o Float      | 16                  |
+| Pts_qtr2_home            | Puntos 2do cuarto equipo local                                           | Int o Float      | 4                   |
+| Pts_qtr3_home            | Puntos 3er cuarto equipo local                                           | Int o Float      | 18                  |
+| Pts_qtr4_home            | Puntos 4to cuarto equipo local                                           | Int o Float      | 13                  |
+| Pts_opt1_home - opt10    | Puntos en tiempos extra 1 a 10 (equipo local)                            | Int o Float      | 0.0                 |
+| Pts_home                 | Total de puntos del equipo local                                         | Float            | 66.0                |
+| Team_id_away             | Id del equipo visitante                                                  | Int              | 1610612752          |
+| Team_abbreviation_away   | Abreviación del nombre del equipo visitante                              | String           | NYK                 |
+| Team_city_name_away      | Ciudad asociada al equipo visitante                                      | String           | New York            |
+| Team_nickname_away       | Sobrenombre del equipo visitante                                         | String           | Stags               |
+| Team_wins_losses_away    | Victorias y derrotas del equipo visitante                                | String           | 0-1                 |
+| Pts_qtr1_away            | Puntos 1er cuarto equipo visitante                                       | Int o Float      | 5.0                 |
+| Pts_qtr2_away            | Puntos 2do cuarto equipo visitante                                       | Int o Float      | 15                  |
+| Pts_qtr3_away            | Puntos 3er cuarto equipo visitante                                       | Int o Float      | 17                  |
+| Pts_qtr4_away            | Puntos 4to cuarto equipo visitante                                       | Int o Float      | 14.0                |
+| Pts_opt1_away - opt10    | Puntos en tiempos extra 1 a 10 (equipo visitante)                        | Int o Float      | 24.0 / 0.0          |
+| Pts_away                 | Total de puntos del equipo visitante                                     | Float            | 68.0                |
+
+->officials:
+| Nombre       | Descripción              | Tipo de dato | Ejemplo     |
+|--------------|--------------------------|--------------|-------------|
+| Game_id      | Id del partido           | Int          | 0029600059  |
+| Oficial_id   | Id del árbitro           | Int          | 1140        |
+| First_name   | Nombre del árbitro       | String       | Bruce       |
+| Last_name    | Apellido del árbitro     | String       | Grillo      |
+| jersey_num   | Número del jersey árbitro| Int          | 9           |
+
+->other_stats:
+| Nombre                    | Descripción                                                        | Tipo de dato | Ejemplo     |
+|---------------------------|--------------------------------------------------------------------|--------------|-------------|
+| Game_id                   | Id del partido                                                     | Int          | 0029600012  |
+| League_id                 | Id de la liga jugada                                               | Int          | 00          |
+| Team_id_home              | Id del equipo local                                                | Int          | 1610612756  |
+| Team_abbreviation_home    | Abreviación del nombre del equipo local                            | String       | PHX         |
+| Team_city_home            | Ciudad del equipo local                                            | String       | Atlanta     |
+| Pts_paint_home            | Puntos desde la línea de marca del equipo local                    | Int          | 44          |
+| Pts_2nd_chance_home       | Puntos obtenidos después de rebotes ofensivos del equipo local     | Int          | 18          |
+| Pts_fb_home               | Puntos de contraataque del equipo local                            | Int          | 2           |
+| Largest_lead_home         | Mayor ventaja de puntos del equipo local                           | Int          | 1           |
+| Lead_charges              | Número de cambios de liderazgo del partido                         | Int          | 4           |
+| Times_tied                | Número de veces empatadas en puntos                                | Int          | 1           |
+| Team_turnovers_home       | Pérdidas del balón forzadas por el equipo local                    | Float        | 0.0         |
+| Total_turnovers_home      | Pérdidas del balón sufridas por el equipo local                    | Float        | 12.0        |
+| Team_rebounds_home        | Rebotes obtenidos por el equipo local                              | Float        | 11.0        |
+| Pts_off_to_home           | Puntos obtenidos de pérdidas de balón del equipo local             | Float        | 18.0        |
+| Team_id_away              | Id del equipo visitante                                            | Int          | 1610612752  |
+| Team_abbreviation_away    | Abreviación del nombre del equipo visitante                        | String       | ORL         |
+| Team_city_away            | Ciudad del equipo visitante                                        | String       | Chicago     |
+| Pts_paint_away            | Puntos desde la línea de marca del equipo visitante                | Int          | 42          |
+| Pts_2nd_chance_away       | Puntos obtenidos tras rebotes ofensivos por el equipo visitante    | Int          | 10          |
+| Pts_fb_home               | Puntos de contraataque del equipo visitante                        | Int          | 13          |
+| Largest_lead_away         | Mayor ventaja de puntos del equipo visitante                       | Int          | 19          |
+| Team_turnovers_away       | Pérdidas del balón forzadas por el equipo visitante                | Float        | 1.0         |
+| Total_turnovers_away      | Pérdidas del balón sufridas por el equipo visitante                | Float        | 27.0        |
+| Team_rebounds_away        | Rebotes obtenidos por el equipo visitante                          | Float        | 11.0        |
+| Pts_off_to_away           | Puntos obtenidos de pérdidas de balón del equipo visitante         | Float        | 19.0        |
+
+->play_by_play:
+| Nombre                   | Descripción                                             | Tipo de dato | Ejemplo                        |
+|--------------------------|---------------------------------------------------------|--------------|-------------------------------|
+| Game_id                  | Id del partido                                          | Int          | 0029600012                    |
+| Eventnum                 | Identificador numérico de la acción                     | Int          | 2                             |
+| Eventmsgtype             | Identificador del tipo de mensaje                       | Int          | 12                            |
+| Eventmsgactiontype       | Identificador de la acción marcada en el mensaje       | Int          | 1                             |
+| period                   | Periodo del partido                                     | Int          | 1                             |
+| Wctimestring             | Hora de la jugada                                       | String       | 14:43 PM                      |
+| Pctimestring             | Momento dentro del partido de la jugada                | String       | 12:00                         |
+| Homedescrption           | Descripción de la jugada en el punto de vista del equipo local | String  | O'Neal REBOUND (Off:0 Def:1)  |
+| Neutraldescription       | Descripción de la jugada en el punto de vista neutral  | String       | Start of 1st Period (14:43 PM EST) |
+| Visitordescription       | Descripción de la jugada en el punto de vista del equipo visitante | String | MISS Cassell 15' Jump Shot    |
+| Score                    | Puntos del equipo local y visitante                     | String       | 0-2                           |
+| Scoremargin              | Margen entre los puntos de los equipos                  | Int          | 2                             |
+| Person1type              | Tipo del jugador 1                                      | Float        | 4.0                           |
+| Player1_id               | Id del jugador 1                                       | String       | 76                            |
+| Player1_name             | Nombre del jugador 1                                   | String       | Sam Cassell                   |
+| Player1_id_team          | Id del equipo del jugador 1                            | Float        | 1610612747.0                  |
+| Player1_team_city        | Ciudad del equipo del jugador 1                        | String       | Phoenix                       |
+| Player1_team_nickname    | Sobrenombre del equipo del jugador 1                   | String       | Suns                          |
+| Player1_team_abbreviation| Abreviatura del nombre del equipo del jugador 1       | String       | PHX                           |
+| Person2type              | Tipo del jugador 2                                      | Float        | 0.0                           |
+| Player2_id               | Id del jugador 2                                       | String       | 0                             |
+| Player2_name             | Nombre del jugador 2                                   | String       | Robert Horry                  |
+| Player2_id_team          | Id del equipo del jugador 2                            | Float        | 1610612756.0                  |
+| Player2_team_city        | Ciudad del equipo del jugador 2                        | String       | Los Angeles                   |
+| Player2_team_nickname    | Sobrenombre del equipo del jugador 2                   | String       | Lakers                        |
+| Player2_team_abbreviation| Abreviatura del nombre del equipo del jugador 2       | String       | LAL                           |
+| Person3type              | Tipo del jugador 3                                      | Float        | 4.0                           |
+| Player3_id               | Id del jugador 3                                       | String       | 76                            |
+| Player3_name             | Nombre del jugador 3                                   | String       | Cedric Ceballos               |
+| Player3_id_team          | Id del equipo del jugador 3                            | Float        | 1610612747.0                  |
+| Player3_team_city        | Ciudad del equipo del jugador 3                        | String       | Los Angeles                   |
+| Player3_team_nickname    | Sobrenombre del equipo del jugador 3                   | String       | Lakers                        |
+| Player3_team_abbreviation| Abreviatura del nombre del equipo del jugador 3       | String       | LAL                           |
+| Video_available_flag     | Indicador de si hay un video de la jugada específica   | Boolean      | 0                             |
+
+->player:
+| Nombre     | Descripción                           | Tipo de dato | Ejemplo        |
+|------------|---------------------------------------|--------------|----------------|
+| id         | Id del jugador                        | Int          | 1505           |
+| Full_name  | Nombre completo del jugador           | String       | Forest Able    |
+| First_name | Nombre del jugador                    | String       | Shareef        |
+| Last_name  | Apellido del jugador                  | String       | Abdelnaby      |
+| Is_active  | Marca si el jugador está activo o no  | Boolean      | 1              |
+
+->team:
+| Nombre      | Descripción                       | Tipo de dato | Ejemplo         |
+|-------------|-----------------------------------|--------------|-----------------|
+| Id          | Id del equipo                     | Int          | 1610612737      |
+| Full_name   | Nombre completo del equipo        | String       | Chicago Bulls   |
+| Abbreviation| Abreviación del nombre del equipo | String       | DAL             |
+| Nickname    | Sobrenombre del equipo            | String       | Hawks           |
+| City        | Ciudad del equipo                 | String       | Boston          |
+| State       | Estado del equipo                 | String       | Atlanta         |
+| Year_founded| Año de fundación del equipo       | Float        | 1949.0          |
+
+->team_details:
+| Nombre           | Descripción                              | Tipo de dato | Ejemplo                                |
+|------------------|------------------------------------------|--------------|----------------------------------------|
+| Team_id          | Id del equipo                            | Int          | 1610612737                             |
+| Abbeviation      | Abreviación del nombre del equipo        | String     | ATL                                      |
+| Nickname         | Sobrenombre del equipo                   | String       | Bulls                                  |
+| Yearfounded      | Año de fundación del equipo              | Float        | 1966.0                                 |
+| City             | Ciudad del equipo                        | String       | Chicago                                |
+| Arena            | Arena asignada al equipo                 | String       | United Center                          |
+| Arenacapacity    | Capacidad de la arena asignada al equipo | Float        | 21711.0                                |
+| Owner            | Propietario del equipo                   | String       | Michael Reinsdorf                      |
+| Generalmanager   | Manager general del equipo               | String       | Arturas Karnisovas                     |
+| Headcoach        | Coach del equipo                         | String       | Billy Donovan                          |
+| Dleagueaffiliation | Afiliación del equipo                  | String       | Windy City Bulls                       |
+| Facebook         | Link de Facebook del equipo              | String       | https://www.facebook.com/chicagobulls  |
+| Instagram        | Link de Instagram del equipo             | String       | https://instagram.com/chicagobulls     |
+| twitter          | Link de twitter del equipo               | String       | https://twitter.com/chicagobulls       |
+
+->team_history
+| Nombre            | Descripción                                            | Tipo de dato | Ejemplo    |
+|-------------------|--------------------------------------------------------|--------------|------------|
+| Team_id           | Id del equipo                                          | Int          | 1610612737 |
+| City              | Ciudad del equipo                                      | String       | Atlanta    |
+| Nickname          | Sobrenombre del equipo                                 | String       | Hawks      |
+| Year_founded      | Año de fundación del equipo                            | Int          | 1968       |
+| Year_still_active | Número que marca el último año de actividad del equipo | Int          | 2019       |
