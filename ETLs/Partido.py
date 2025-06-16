@@ -154,6 +154,15 @@ df_partidos = df_partidos.join(
 .withColumnRenamed("idEquipo", "idEquipo_Local") 
 
 # Parte Ubicacion #
+#estandarizar datos de la ubicacion
+df_partidos = df_partidos.withColumn("arena", lower(trim(col("arena")))) \
+                         .withColumn("ciudad", lower(trim(col("ciudad")))) \
+                         .withColumn("estado", lower(trim(col("estado"))))
+
+ubicacion_df = ubicacion_df.withColumn("arena", lower(trim(col("arena")))) \
+                           .withColumn("ciudad", lower(trim(col("ciudad")))) \
+                           .withColumn("estado", lower(trim(col("estado"))))
+
 df_partidos = df_partidos.join(
     ubicacion_df,
     on=[

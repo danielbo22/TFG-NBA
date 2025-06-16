@@ -82,10 +82,10 @@ df.show()
 # Cast explícito de todas las columnas según los tipos esperados en Hive
 df = df.select(
     col("idUbicacion").cast(IntegerType()).alias("idUbicacion"),
-    col("estado").cast(StringType()).alias("estado"),
+    col("capacidad").cast(StringType()).alias("capacidad"),
     col("arena").cast(StringType()).alias("arena"),
     col("ciudad").cast(StringType()).alias("ciudad"),
-    col("capacidad").cast(StringType()).alias("capacidad")
+    col("estado").cast(StringType()).alias("estado")
 )
 
 # Almacenamos el resultado en Hive
